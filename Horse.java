@@ -36,6 +36,14 @@ public class Horse extends Tile {
     return isPiece;
   }
 
+  public int getxPos() {
+    return xPos;
+  }
+
+  public int getyPos() {
+    return yPos;
+  }
+
   @Override
   public String toString() {
     if (this.color) {

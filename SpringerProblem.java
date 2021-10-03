@@ -12,6 +12,7 @@ else:
 
   public static void main(String[] args) {
     ChessState test = new ChessState();
+    test.calculateQuality();
     System.out.println(test.toString());
   }
 }
