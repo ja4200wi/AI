@@ -1,18 +1,40 @@
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.TreeSet;
+
 public class SpringerProblem {
 
-  /*Hill-Climbing(Searchproblem problem)
-  State current = createRandomState(problem)
-while (true):
-  Set neighbors = getNeighbors(current)
-  State bestNeighbor = getBestState(neighbors)
-if (valueOf(current) <= valueOf(bestNeighbor)):
-      return current
-else:
-  current = bestNeighbor*/
+  public static ChessState HillClimbing(ChessState startState) {
+    ChessState current = new ChessState();
+    while (true) {
+      LinkedList<ChessState> neighbors = ChessState.getNeighbors(current);
+      ChessState bestNeighbor = getBestState(neighbors);
+      if (current.getQuality() <= bestNeighbor.getQuality()) {
+        return current;
+      } else {
+        current = bestNeighbor;
+      }
+    }
+  }
+
+  public static ChessState getBestState(LinkedList neighbors){
+    ChessState maximum = new ChessState();
+    int maximumQuality = maximum.getQuality();
+    Iterator<ChessState> it = neighbors.iterator();
+    while(it.hasNext()){
+      ChessState potential = it.next();
+      if(potential.getQuality()>maximumQuality){
+        maximum = potential;
+        maximumQuality = potential.getQuality();
+      }
+    }
+    return maximum;
+  }
 
   public static void main(String[] args) {
     ChessState test = new ChessState();
     test.calculateQuality();
-    System.out.println(test.toString());
+    ChessState hopefullyBest = HillClimbing(test);
+    System.out.println(hopefullyBest.getQuality());
   }
 }

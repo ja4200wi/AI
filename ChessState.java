@@ -2,8 +2,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.TreeSet;
 
-public class ChessState {
+public class ChessState implements Comparable {
 
   private Tile[][] board = new Tile[8][8];
   private int quality = 0;
@@ -14,10 +16,12 @@ public class ChessState {
         board[x][y] = new EmptyTile();
       }
     }
-    board[1][1] = new Horse(true, 1,1);
-    board[4][3] = new Horse(true, 4,3);
-    board[0][3] = new Horse(true, 0,3);
-    board[4][6] = new Horse(true, 7,3);
+    calculateQuality();
+  }
+
+  public ChessState(Tile[][] board){
+    this.board = board;
+    calculateQuality();
   }
 
   public void calculateQuality(){
@@ -41,6 +45,55 @@ public class ChessState {
       }
     }
     result -= hits();
+    this.quality = result;
+  }
+
+
+  public static LinkedList<ChessState> getNeighbors(ChessState current){
+    LinkedList<ChessState> neighbors = new LinkedList<>();
+    Tile[][] currentBoard = current.getBoard();
+    for(int x = 0;x<currentBoard.length;x++){
+      for(int y = 0;y< currentBoard[x].length;y++){
+        Horse blackHorse = new Horse(true,x,y);
+        Horse whiteHorse = new Horse(false,x,y);
+        EmptyTile empty = new EmptyTile();
+        //If current checked tile is a horse add neighborstate with empty field and different color
+        if(currentBoard[x][y].isPiece()){
+          Horse horseToCheck = (Horse) currentBoard[x][y];
+          Tile[][] newNeighbor = cloneBoard(currentBoard);
+          newNeighbor[x][y] = empty;
+          neighbors.add(new ChessState(newNeighbor));
+          if(horseToCheck.getColor()){
+            Tile[][] newNeighbor2 = cloneBoard(currentBoard);
+            newNeighbor2[x][y] = new Horse(false,x,y);
+            neighbors.add(new ChessState(newNeighbor2));
+          } else {
+            Tile[][] newNeighbor2 = cloneBoard(currentBoard);
+            newNeighbor2[x][y] = new Horse(true,x,y);
+            neighbors.add(new ChessState(newNeighbor2));
+          }
+        } else {
+          Tile[][] newNeighbor = cloneBoard(currentBoard);
+          Tile[][] newNeighbor2 = cloneBoard(currentBoard);
+          newNeighbor[x][y] = new Horse(true,x,y);
+          newNeighbor2[x][y] = new Horse(false,x,y);
+          neighbors.add(new ChessState(newNeighbor));
+          neighbors.add(new ChessState(newNeighbor2));
+        }
+      }
+    }
+    return neighbors;
+  }
+
+  public static Tile[][] cloneBoard(Tile[][] board){
+    Tile[][] copy = new Tile[board.length][board.length];
+    for(int x = 0;x<board.length;x++){
+      for(int y = 0;y<board[x].length;y++){
+        Tile alarm = board[x][y];
+        copy[x][y] = alarm;
+      }
+    }
+    return copy;
   }
 
   public int getNeighborPoints(int x,int y){
@@ -101,7 +154,6 @@ public class ChessState {
       Horse horse = iterator.next();
       hits += horseHits(horse.getxPos(),horse.getyPos());
     }
-    System.out.println("Hit Cost: "+ (hits));
     return (hits /2)*3;
   }
 
@@ -111,7 +163,6 @@ public class ChessState {
     count += horseHitsInDirection(x,y,0,1);
     count += horseHitsInDirection(x,y,-1,0);
     count += horseHitsInDirection(x,y,0,-1);
-    System.out.println(count);
     return count;
   }
 
@@ -142,6 +193,18 @@ public class ChessState {
   }
 
   @Override
+  public int compareTo(Object o) {
+    ChessState object = (ChessState) o;
+    if(this.quality<object.getQuality()){
+      return 1;
+    } else if (this.quality>object.getQuality()){
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  @Override
   public String toString() {
     String s = "";
     for(int x = 0;x<board.length;x++){
@@ -153,20 +216,7 @@ public class ChessState {
     return s;
   }
 
-  public class EmptyTile extends Tile{
-    private boolean isPiece = false;
-
-    public EmptyTile(){
-
-    }
-    public boolean isPiece() {
-      return isPiece;
-    }
-
-    @Override
-    public String toString() {
-      return "-";
-    }
+  public Tile[][] getBoard() {
+    return board;
   }
-
 }
