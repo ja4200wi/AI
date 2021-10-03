@@ -1,9 +1,6 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.TreeSet;
 
 public class ChessState implements Comparable {
 
@@ -26,6 +23,7 @@ public class ChessState implements Comparable {
 
   public void calculateQuality(){
     int result = 0;
+    int neighborPoints = 0;
     for(int x = 0;x<board.length;x++){
       for(int y = 0;y<board[x].length;y++){
         //Check if is horse
@@ -40,11 +38,14 @@ public class ChessState implements Comparable {
             result += 2;
           }
           //Add points for neighbors of different color
-          result += getNeighborPoints(x,y);
+          int nP = getNeighborPoints(x,y);
+          result += nP;
+          neighborPoints += nP;
         }
       }
     }
     result -= hits();
+    result -= neighborPoints/2;
     this.quality = result;
   }
 

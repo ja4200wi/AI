@@ -6,11 +6,17 @@ public class SpringerProblem {
 
   public static ChessState HillClimbing(ChessState startState) throws CloneNotSupportedException {
     ChessState current = new ChessState();
+    int sidesteps = 100;
     while (true) {
       LinkedList<ChessState> neighbors = ChessState.getNeighbors(current);
       ChessState bestNeighbor = getBestState(neighbors);
       if (current.getQuality() >= bestNeighbor.getQuality()) {
-        return current;
+        if(sidesteps>0){
+          current = bestNeighbor;
+          sidesteps--;
+        } else {
+          return current;
+        }
       } else {
         current = bestNeighbor;
       }
@@ -37,5 +43,6 @@ public class SpringerProblem {
     ChessState hopefullyBest = HillClimbing(test);
     System.out.println(hopefullyBest.getQuality());
     System.out.println(hopefullyBest);
+    hopefullyBest.calculateQuality();
   }
 }
