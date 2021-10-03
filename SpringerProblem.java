@@ -4,12 +4,12 @@ import java.util.TreeSet;
 
 public class SpringerProblem {
 
-  public static ChessState HillClimbing(ChessState startState) {
+  public static ChessState HillClimbing(ChessState startState) throws CloneNotSupportedException {
     ChessState current = new ChessState();
     while (true) {
       LinkedList<ChessState> neighbors = ChessState.getNeighbors(current);
       ChessState bestNeighbor = getBestState(neighbors);
-      if (current.getQuality() <= bestNeighbor.getQuality()) {
+      if (current.getQuality() >= bestNeighbor.getQuality()) {
         return current;
       } else {
         current = bestNeighbor;
@@ -31,10 +31,11 @@ public class SpringerProblem {
     return maximum;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws CloneNotSupportedException {
     ChessState test = new ChessState();
     test.calculateQuality();
     ChessState hopefullyBest = HillClimbing(test);
     System.out.println(hopefullyBest.getQuality());
+    System.out.println(hopefullyBest);
   }
 }

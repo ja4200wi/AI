@@ -21,7 +21,7 @@ public class ChessState implements Comparable {
 
   public ChessState(Tile[][] board){
     this.board = board;
-    calculateQuality();
+    this.calculateQuality();
   }
 
   public void calculateQuality(){
@@ -49,7 +49,8 @@ public class ChessState implements Comparable {
   }
 
 
-  public static LinkedList<ChessState> getNeighbors(ChessState current){
+  public static LinkedList<ChessState> getNeighbors(ChessState current)
+      throws CloneNotSupportedException {
     LinkedList<ChessState> neighbors = new LinkedList<>();
     Tile[][] currentBoard = current.getBoard();
     for(int x = 0;x<currentBoard.length;x++){
@@ -85,10 +86,17 @@ public class ChessState implements Comparable {
     return neighbors;
   }
 
-  public static Tile[][] cloneBoard(Tile[][] board){
+  public static Tile[][] cloneBoard(Tile[][] board) throws CloneNotSupportedException {
     Tile[][] copy = new Tile[board.length][board[0].length];
     for(int x = 0;x<board.length;x++){
-      copy[x] = board[x].clone();
+      for(int y = 0;y<board[x].length;y++){
+        if(board[x][y].isPiece()) {
+          Horse horse = (Horse)board[x][y];
+          copy[x][y] = (Horse) horse.clone();
+        } else {
+          copy[x][y] = new EmptyTile();
+        }
+      }
     }
     return copy;
   }
