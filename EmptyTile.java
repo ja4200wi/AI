@@ -9,6 +9,11 @@ public class EmptyTile extends Tile{
   }
 
   @Override
+  protected Object clone() throws CloneNotSupportedException {
+    return new EmptyTile();
+  }
+
+  @Override
   public String toString() {
     return "-";
   }

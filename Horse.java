@@ -45,6 +45,12 @@ public class Horse extends Tile {
   }
 
   @Override
+  protected Object clone() throws CloneNotSupportedException {
+    Horse copy = new Horse(this.color,this.xPos,this.yPos);
+    return copy;
+  }
+
+  @Override
   public String toString() {
     if (this.color) {
       return "B";

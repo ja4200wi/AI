@@ -86,12 +86,9 @@ public class ChessState implements Comparable {
   }
 
   public static Tile[][] cloneBoard(Tile[][] board){
-    Tile[][] copy = new Tile[board.length][board.length];
+    Tile[][] copy = new Tile[board.length][board[0].length];
     for(int x = 0;x<board.length;x++){
-      for(int y = 0;y<board[x].length;y++){
-        Tile alarm = board[x][y];
-        copy[x][y] = alarm;
-      }
+      copy[x] = board[x].clone();
     }
     return copy;
   }
