@@ -10,6 +10,7 @@ public class SpringerProblem {
     while (true) {
       LinkedList<ChessState> neighbors = ChessState.getNeighbors(current);
       ChessState bestNeighbor = getBestState(neighbors);
+      bestNeighbor = pickRandomBest(neighbors, bestNeighbor.getQuality());
       if (current.getQuality() >= bestNeighbor.getQuality()) {
         if(sidesteps>0){
           current = bestNeighbor;
@@ -21,6 +22,25 @@ public class SpringerProblem {
         current = bestNeighbor;
       }
     }
+  }
+
+  public static ChessState pickRandomBest(LinkedList<ChessState> list,int highestQuality){
+    ChessState randomBest = null;
+    LinkedList<ChessState> bestOnes = new LinkedList<>();
+    Iterator<ChessState> it = list.iterator();
+    while(it.hasNext()) {
+      ChessState now = it.next();
+      if (now.getQuality() == highestQuality) {
+        bestOnes.add(now);
+      }
+    }
+      int amount = bestOnes.size();
+      int random = (int)(Math.random() * amount);
+      for(int i = 0;i<=random;i++){
+        Iterator<ChessState> it2 = bestOnes.iterator();
+        randomBest = it2.next();
+      }
+    return randomBest;
   }
 
   public static ChessState getBestState(LinkedList neighbors){
