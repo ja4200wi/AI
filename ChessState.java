@@ -15,8 +15,8 @@ public class ChessState {
       }
     }
     board[1][1] = new Horse(true, 1,1);
-    board[5][5] = new Horse(true, 5,5);
-    board[6][4] = new Horse(true, 6,4);
+    board[4][3] = new Horse(true, 4,3);
+    board[0][3] = new Horse(true, 0,3);
     board[4][6] = new Horse(true, 7,3);
   }
 
@@ -107,25 +107,34 @@ public class ChessState {
 
    int horseHits(int x, int y){
     int count = 0;
-    count += horseHitsInDirection(x,y,1,1);
-    count += horseHitsInDirection(x,y,-1,-1);
-    count += horseHitsInDirection(x,y,-1,1);
-    count += horseHitsInDirection(x,y,1,-1);
+    count += horseHitsInDirection(x,y,1,0);
+    count += horseHitsInDirection(x,y,0,1);
+    count += horseHitsInDirection(x,y,-1,0);
+    count += horseHitsInDirection(x,y,0,-1);
     System.out.println(count);
     return count;
   }
 
    int horseHitsInDirection(int x, int y, int xDir, int yDir){
-    int x1 = x +xDir;
-    int y1 = y+ yDir;
-    while(x1 < 8 && x1 >= 0 && y1 < 8 && y1 >= 0){
-      if(board[x1][y1].isPiece()){
-        return 1;
-      }
-      x1 += xDir;
-      y1 += yDir;
-    }
-    return 0;
+    int solv = 0;
+    int x1 = x + 2 * xDir + 1* yDir;
+    int y1 = y + 2 * yDir + 1* xDir;
+
+    int x2 = x + 2 * xDir + -1* yDir;
+     int y2 = y + 2 * yDir + -1* xDir;
+
+     if (x1 < 8 && x1 >= 0 && y1 < 8 && y1 >= 0) {
+       if(board[x1][y1].isPiece()){
+         solv++;
+       }
+     }
+
+     if (x2 < 8 && x2 >= 0 && y2 < 8 && y2 >= 0) {
+       if(board[x2][y2].isPiece()){
+         solv++;
+       }
+     }
+    return solv;
   }
 
   public int getQuality() {
