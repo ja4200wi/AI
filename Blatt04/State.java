@@ -26,6 +26,15 @@ public class State {
 
 
   public int hashCode(){
-    return 0;
+    if(this.bohnenFeld == null){
+      return 0;
+    }
+    
+    int a = 1;
+    for(int i : this.bohnenFeld){
+      a = 31 * a + i;
+    }
+    return a;
   }
+    
 }
