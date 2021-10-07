@@ -24,7 +24,7 @@ public class State {
     return true;
   }
 
-
+  // Aufgabe 2c
   public int hashCode(){
     if(this.bohnenFeld == null){
       return 0;
