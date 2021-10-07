@@ -61,8 +61,7 @@ public class SpringerProblem {
     ChessState test = new ChessState();
     test.calculateQuality();
     ChessState hopefullyBest = HillClimbing(test);
-    System.out.println(hopefullyBest.getQuality());
-    System.out.println(hopefullyBest);
-    hopefullyBest.calculateQuality();
+    System.out.println("The highest found score is: " + hopefullyBest.getQuality());
+    System.out.println("\nThis is the state: \n\n" +hopefullyBest);
   }
 }

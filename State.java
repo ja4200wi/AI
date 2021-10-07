@@ -25,7 +25,13 @@ public class State {
   }
 
 
-  public int hashCode(){
-
+  public int[] hashcode(){
+    int[] newfield = new int[12];
+    for(int x = 0; x < bohnenFeld.length; x++){
+      newfield[x] = bohnenFeld[x] % 6;
+    }
+    return newfield;
   }
+  
+
 }
