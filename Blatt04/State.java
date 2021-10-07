@@ -1,4 +1,4 @@
-package aufgabe2;
+package Blatt04;
 
 public class State {
 
@@ -6,12 +6,14 @@ public class State {
 	int[] bohnenFeld; // index 0-5 sind auf der grünen , index 6-11 auf roten Seite
 	int scoreBlue;
 	int scoreRed;
+	boolean turn; // false = Spieler1; true = Spieler2
 
 	// Aufgabe 2a
 	public State(int[] i) {
 		this.bohnenFeld = i;
 		this.scoreBlue = 0;
 		this.scoreRed = 0;
+		this.turn = false;
 	}
 	
 	/*public State() {
@@ -22,6 +24,9 @@ public class State {
 
 	// Aufgabe 2b
 	boolean equals(State state) {
+    if(state.turn!=this.turn){
+      return false;
+    }
 		for (int x = 0; x < state.bohnenFeld.length; x++) {
 			if (state.bohnenFeld[x] != this.bohnenFeld[x]) {
 				return false;
