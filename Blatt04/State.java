@@ -1,7 +1,7 @@
 public class State {
 
   // Aufgabe 2a
-  int[] bohnenFeld; //index 0-5 sind auf der grünen , index 6-11 auf roten Seite
+  int[] bohnenFeld; //index 0-5 sind auf der blauen , index 6-11 auf roten Seite
   int scoreBlue;
   int scoreRed;
 
