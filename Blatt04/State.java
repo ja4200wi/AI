@@ -35,29 +35,19 @@ public class State {
 		return true;
 	}
 
-	public int hashCode() {
-		if (this.bohnenFeld == null) {
-			return 0;
-		}
-
-		int a = 1;
-		for (int i : this.bohnenFeld) {
-			a = 31 * a + i;
-		}
-		return a;
-	}
+  public int hashCode() {
+    int a = 0;
+    for (int i : this.bohnenFeld) {
+      a = 7 * a + i % 7;
+    }
+    if(this.turn){
+      return a;
+    }else{
+      return a * -1;
+    }
+  }
 	
-	public int hashCodeTest(int[] arr) {
-		if (arr == null) {
-			return 0;
-		}
 
-		int a = 1;
-		for (int i : arr) {
-			a = 31 * a + i;
-		}
-		return a;
-	}
 	
 	public static void main(String[] args) {
 		int[] a = new int[] { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
@@ -73,9 +63,6 @@ public class State {
 		int[] a5 = new int[] { 6, 11, 6, 6, 6, 6, 6, 9, 6, 6, 6, 6 };
 		
 		System.out.println("a1 equals: " + s.equals(new State(a1)));
-		System.out.println("hashCode a2 : " + s.hashCodeTest(a2));
-		System.out.println("hashCode a3 : " + s.hashCodeTest(a3));
-		System.out.println("hashCode a4 : " + s.hashCodeTest(a4));
-		System.out.println("hashCode a5 muss gleich sein wie 3 : " + s.hashCodeTest(a5));
+
 	}
 }
