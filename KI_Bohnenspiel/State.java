@@ -1,3 +1,5 @@
+package KI_Bohnenspiel;
+
 import java.util.ArrayList;
 
 
@@ -8,6 +10,8 @@ public class State {
 	private int scoreRed;
 	private boolean turn; // true: its reds' turn; false: blue
 	private boolean terminal;
+	private int value; // Heuristik Wert des Zustandes
+	private boolean iAm;
 	
 	public State() {
 		for(int i = 0; i < 12; i++) {
@@ -172,6 +176,45 @@ public class State {
 			}
 			return value;
 		}
+	}
+
+	public void heuristic007(){
+		//Initialisierung Variablen
+		int value = 0;	//Güte eines Zustands
+		int[] feld = this.getBohnenFeld();
+		int[] meinFeld = this.getBohnenFeld();
+		int[] gegnerFeld = this.getBohnenFeld();
+
+
+		// Hier Parameter über die die Heuristik schnell angepasst werden kann
+		int schatzKistenMulti = 1; // Multiplikator für bereits verteilte Punkte
+		int keineMoegMulti = 1;	//Multiplikator für Felder die dem Gegner keine Punkterzielung erlauben
+		int potPunktMulti = 1; //Multiplikator für Felder auf denen potentiell Punkte geholt werden könnten
+		int beansPossMulti = 1;
+
+		//Hier grundlegende Parameter
+		int schatzKistenPunkte = (this.scoreRed - this.scoreBlue) * schatzKistenMulti;
+		//int keineMoeg = 0; //für Gegner
+		//int potPunkte = 0; //für Uns @TODO Unterscheidung zwischen wer dran ist
+		int possibleMovesOpp = 6;
+		int beansInPossesion = 0;
+
+		for(int i = 0;i<meinFeld.length;i++){
+			beansInPossesion += meinFeld[i];
+		}
+		beansInPossesion *= beansPossMulti;
+
+		/*for(int i = 0;i< feld.length;i++) {
+			if(feld[i]==1 || feld[i]==3 || feld[i]==5 ) {
+
+			} else {
+				keineMoeg++;
+				potPunkte++;
+			}
+		}*/
+		//keineMoeg *= keineMoegMulti;
+		//potPunkte *= potPunktMulti;
+		this.value = value;
 	}
 	
 	// berechnet die Punkte die es für den neu erreichten Zustand gibt
