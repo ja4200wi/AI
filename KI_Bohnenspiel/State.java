@@ -1,25 +1,19 @@
-package KI_Bohnenspiel;
-
-import java.util.ArrayList;
-
-
-public class State {
-
   private int[] bohnenFeld = new int[12]; //index 0-5 rot; 6-11 blau
   private int scoreBlue;
   private int scoreRed;
   private boolean turn; // true: its reds' turn; false: blue
   private boolean terminal;
   private int value; // Heuristik Wert des Zustandes
-  private boolean iAm;
+  static private boolean iAmStarting = true;
 
   public State() {
     for (int i = 0; i < 12; i++) {
       this.bohnenFeld[i] = 6;
     }
+    //this.bohnenFeld = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     this.scoreBlue = 0;
     this.scoreRed = 0;
-    this.turn = true;
+    this.turn = false;
   }
 
   public State(int[] state, boolean turn, int punkteRot, int punkteBlau) {
@@ -78,7 +72,11 @@ public class State {
   }
 
   public int heuristic(){
-    return this.scoreRed-this.scoreBlue;
+    if(iAmStarting){
+      return this.scoreRed-this.scoreBlue;
+    }else{
+      return this.scoreBlue-this.scoreRed;
+    }
   }
 
   // berechnet die Punkte die es für den neu erreichten Zustand gibt
@@ -96,7 +94,6 @@ public class State {
         }
       }
     }
-    System.out.println("4 " + points);
     return points;
   }
 
@@ -107,15 +104,19 @@ public class State {
       System.out.print(s);
       System.out.println("\n");
     }
+    //System.out.println("before: \n" + state);
+    //state.makeAMove(9);
+    //System.out.println("after: \n" + state);
+
 
     //int [] testTerminalFeld = {1,2,3,4,5,6,0,0,0,0,0,0};
     //State terminalState = new State(testTerminalFeld,true, 20, 50);
     //System.out.println(terminalState.calcTerminal());
     //System.out.println(terminalState);
 
-    int[] testFeld = {1, 2, 3, 4, 5, 6, 2, 0, 0, 0, 0, 0};
+    /*int[] testFeld = {1, 2, 3, 4, 5, 6, 2, 0, 0, 0, 0, 0};
     State testState = new State(testFeld, true, 20, 50);
-    System.out.println("is done? " + testState.calcTerminal());
+    System.out.println("is done? " + testState.calcTerminal());*/
 
   }
 
@@ -210,9 +211,16 @@ public class State {
 
     bohnen = this.bohnenFeld[place];
     for (int i = 1; i <= bohnen; i++) {
+      int help =  (this.bohnenFeld[(place + i) % 12]) + 1;
+      // System.out.println("this.bohnenfeld at place+i: " + this.bohnenFeld[(place + i) % 12] + " place+i: " + (place+i));
       this.bohnenFeld[(place + i) % 12]++;
+      //System.out.println("was es rein macht: " + help);
+      //System.out.println("wo es das rein macht: " + (place + i));
+      //System.out.println("state: " + this);
+      // System.out.println("this.bohnenfeld at place+i mit ++: " + this.bohnenFeld[(place + i) % 12]++);
     }
 
+    this.bohnenFeld[place] = 0;
     int lastPlace = place + bohnen; // wo wir uns danach befinden
     // TODO Punkte verteilen wenn bohnenFeld an lastPlace 2,4,6
     if (this.bohnenFeld[lastPlace % 12] == 2 || this.bohnenFeld[lastPlace % 12] == 4
@@ -225,7 +233,6 @@ public class State {
       this.bohnenFeld[lastPlace % 12] = 0;
       // setTerminality --> schauen ob generell dann Spiel vorbei und this.termianl setzen
     }
-    this.bohnenFeld[lastPlace % 12] = 0;
 
   }
 
@@ -256,7 +263,6 @@ public class State {
 
 		/*for(int i = 0;i< feld.length;i++) {
 			if(feld[i]==1 || feld[i]==3 || feld[i]==5 ) {
-
 			} else {
 				keineMoeg++;
 				potPunkte++;
@@ -342,8 +348,10 @@ public class State {
   }
 
   String getGameStats(){
-    return "Red: "+ this.scoreRed+ "Blue: "+this.scoreBlue;
+    return "Red: "+ this.scoreRed+ "\tBlue: "+this.scoreBlue;
   }
 
-}
+  public static void setiAmStarting(boolean iAmStarting) {
+    State.iAmStarting = iAmStarting;
+  }
 
