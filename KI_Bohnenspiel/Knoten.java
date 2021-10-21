@@ -6,21 +6,14 @@ import java.util.Iterator;
 
 public class Knoten {
 
-  static final int C = 1;
 
   Knoten predecessor;
 
   boolean isLeaf;
   State state;
-  boolean hasBeenPlayedOut = false;
 
-  int winsA = 0;
-  int winsB = 0;
-  int tries = 0;
 
   ArrayList<Knoten> children = new ArrayList<>();
-  boolean[] isPossible = new boolean[6];
-  boolean[] wasMade = new boolean[6];
 
 
   static Knoten getFirstKnot(State state){
@@ -36,7 +29,7 @@ public class Knoten {
     child.isLeaf = true;
     child.state = state;
     child.predecessor = this;
-   if(this.children.size() == this.state.amountOfPosMoves()){
+   if(this.state.isTerminal()){
      this.isLeaf = true;
    }
     this.children.add(child);
