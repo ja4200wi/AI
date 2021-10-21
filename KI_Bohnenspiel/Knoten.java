@@ -8,7 +8,9 @@ public class Knoten {
 
 
   static Knoten bestNextMove;
-  static int finalDepth = 6;
+  static Knoten bestNextMoveLow;
+  static int finalDepth = 2;
+  static int finalDepthLow = 6;
   Knoten predecessor;
 
   boolean isLeaf;
@@ -97,18 +99,21 @@ public class Knoten {
     return bestNextMove.state;
   }
 
+
+
+
   public static void main(String[] args){
     State state = new State();
-
     int moves = 0;
     while(!state.isTerminal() && moves < 60){
       moves++;
       state = letKIroll(state);
       System.out.println(state);
       state = someNextMove(state);
-      System.out.println();
-      System.out.println(state.getGameStats());
       System.out.println(state);
+      System.out.println(state.getGameStats());
+      System.out.println();
+
     }
   }
 
@@ -117,4 +122,56 @@ public class Knoten {
   }
 
 
+
+  //lowlights
+
+  static State letKIrollLow(State state){
+    bestNextMoveLow = null;
+    Knoten startingKnot = getFirstKnot(state);
+    startingKnot.maxLow(finalDepthLow);
+    if(bestNextMoveLow == null){
+      System.out.println("Its over...");
+    }
+    return bestNextMoveLow.state;
+  }
+
+  int maxLow(int depth){
+    if(depth == 0 || this.state.isTerminal()){
+      return this.state.heuristic();
+    }
+    int maxWert = 100000000;
+    ArrayList<Knoten> posMoves = getPossibleMovesAsKnots();
+    Iterator<Knoten> iterator = posMoves.iterator();
+    while(iterator.hasNext()){
+      Knoten k = iterator.next();
+      int wert = k.minLow(depth-1);
+      if(wert < maxWert){
+        maxWert = wert;
+        if(depth == finalDepthLow){
+          bestNextMoveLow = k;
+        }
+      }
+    }
+    return maxWert;
+  }
+
+  int minLow(int depth){
+    if(depth == 0 || this.state.isTerminal()){
+      return this.state.heuristic();
+    }
+    int minWert = -100000000;
+    ArrayList<Knoten> posMoves = getPossibleMovesAsKnots();
+    Iterator<Knoten> iterator = posMoves.iterator();
+    while(iterator.hasNext()){
+      Knoten k = iterator.next();
+      int wert = k.maxLow(depth-1);
+      if(wert > minWert){
+        minWert = wert;
+        if(depth == finalDepthLow){
+          bestNextMoveLow = k;
+        }
+      }
+    }
+    return minWert;
+  }
 }
