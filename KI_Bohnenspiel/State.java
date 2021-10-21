@@ -1,3 +1,5 @@
+package KI_Bohnenspiel;
+
 import java.util.ArrayList;
 
 
@@ -270,7 +272,22 @@ public class State {
 	}
 
 
+	public int amountOfPosMoves(){
+	  int count = 0;
+	  int i = this.turn ? 0: 5;
+	    for(int x = 0; x < 6; x++){
+	      if(this.bohnenFeld[i+x] > 0){
+	        count++;
+        }
+      }
+    return count;
+  }
+
 	public int[] getBohnenFeld(){
 	return this.bohnenFeld;
 	}
+
+	public boolean isTurn(){
+	  return turn;
+  }
 }
