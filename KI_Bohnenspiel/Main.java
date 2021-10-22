@@ -85,9 +85,10 @@ public class Main {
 				}
 				System.out.println("wir");
 				Knoten k = new Knoten();
-				boolean myColor = offset==0 ? true : false;
+				boolean myColor = offset==0 ? true : false; // muss eigtl andersrum sein
 				System.out.println("Ich bin " + myColor);
 				State state = k.letKIroll(new State(board, false, 0, 0));
+				System.out.println("Welchen state wir bekommen: " + state);
 				State.setOffset(offset);
 				State.setiAmStarting(myColor);
 				move(gameID, state.lastMoveOnField + 1);

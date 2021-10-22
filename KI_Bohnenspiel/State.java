@@ -240,33 +240,31 @@ public class State {
 	public int heuristic007() {
 		// Initialisierung Variablen
 		int value = 0; // Güte eines Zustands
-		int[] feld = this.getBohnenFeld();
+		int meinScore = iAmStarting ? this.scoreRed : this.scoreBlue;
+		int gegScore = !iAmStarting ? this.scoreRed : this.scoreBlue;
 		int[] meinFeld = iAmStarting ? this.getRedPits() : this.getBluePits();
+		int[] gegFeld = !iAmStarting ? this.getRedPits() : this.getBluePits();
 
 		// Hier Parameter über die die Heuristik schnell angepasst werden kann
 		int schatzKistenMulti = 1; // Multiplikator für bereits verteilte Punkte
-		int keineMoegMulti = 1; // Multiplikator für Felder die dem Gegner keine Punkterzielung erlauben
-		int potPunktMulti = 1; // Multiplikator für Felder auf denen potentiell Punkte geholt werden könnten
-		int beansPossMulti = 1;
+		int beansInPossMulti = 1; // Multiplikator für Bohnen auf eigenen Feldern
+		int gegNullFeldMulti = 1; // Multiplikator für 0 Felder des Gegners
 
 		// Hier grundlegende Parameter
-		int schatzKistenPunkte = (this.scoreRed - this.scoreBlue) * schatzKistenMulti;
-		// int keineMoeg = 0; //für Gegner
-		// int potPunkte = 0; //für Uns @TODO Unterscheidung zwischen wer dran ist
-		int possibleMovesOpp = 6;
-		int beansInPossesion = 0; //
+		int schatzKistenPunkte = (meinScore - gegScore) * schatzKistenMulti;
+		int gegNullFeld = 0; // Felder die der Gegner nicht spielen kann
+		int beansInPossesion = 0; // Bohnen die wir besitzen
 
 		for (int i = 0; i < meinFeld.length; i++) {
 			beansInPossesion += meinFeld[i];
 		}
-		beansInPossesion *= beansPossMulti;
+		for (int i = 0; i < gegFeld.length; i++) {
+			if(gegFeld[i] == 0) gegNullFeld++;
+		}
+		beansInPossesion *= beansInPossMulti;
+		gegNullFeld *= gegNullFeldMulti;
 
-		/*
-		 * for(int i = 0;i< feld.length;i++) { if(feld[i]==1 || feld[i]==3 || feld[i]==5
-		 * ) { } else { keineMoeg++; potPunkte++; } }
-		 */
-		// keineMoeg *= keineMoegMulti;
-		// potPunkte *= potPunktMulti;
+		value += beansInPossesion + gegNullFeld + schatzKistenPunkte;
 		return value;
 	}
 

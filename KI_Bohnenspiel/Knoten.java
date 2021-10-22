@@ -48,7 +48,7 @@ public class Knoten {
 
 	int max(int depth) {
 		if (depth == 0 || this.state.isTerminal()) {
-			return this.state.heuristic();
+			return this.state.heuristic007();
 		}
 		int maxWert = -100000000;
 		ArrayList<Knoten> posMoves = getPossibleMovesAsKnots();
@@ -68,7 +68,7 @@ public class Knoten {
 
 	int min(int depth) {
 		if (depth == 0 || this.state.isTerminal()) {
-			return this.state.heuristic();
+			return this.state.heuristic007();
 		}
 		int minWert = +10000;
 		ArrayList<Knoten> posMoves = getPossibleMovesAsKnots();
