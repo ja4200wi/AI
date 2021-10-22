@@ -47,7 +47,7 @@ public class Knoten {
 	}
 
 	int max(int depth) {
-		if (depth == 0 || this.state.isTerminal()) {
+		if (depth == 0 || this.state.calcTerminal()) {
 			return this.state.heuristic007();
 		}
 		int maxWert = -100000000;
@@ -67,7 +67,7 @@ public class Knoten {
 	}
 
 	int min(int depth) {
-		if (depth == 0 || this.state.isTerminal()) {
+		if (depth == 0 || this.state.calcTerminal()) {
 			return this.state.heuristic007();
 		}
 		int minWert = +10000;

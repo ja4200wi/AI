@@ -16,7 +16,7 @@ public class Main {
 		//System.out.println(load(server));
 		createGame();
 		//openGames();
-		// joinGame("0");
+		//joinGame("2479");
 	}
 
 	static void createGame() throws Exception {
@@ -89,7 +89,7 @@ public class Main {
 				boolean myColor = offset==0 ? true : false; // muss eigtl andersrum sein
 				System.out.println("Ich bin " + myColor);
 				State.setiAmStarting(myColor);
-				State state = k.letKIroll(new State(board, false, 0, 0));
+				State state = k.letKIroll(new State(board, myColor, p1, p2));
 				System.out.println("Welchen state wir schicken: \n" + state);
 				//State.setOffset(offset);
 				board = updateBoard(board, state.lastMoveOnField);
