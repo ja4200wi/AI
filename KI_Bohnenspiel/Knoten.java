@@ -8,7 +8,7 @@ public class Knoten {
 
 	static Knoten bestNextMove;
 	static Knoten bestNextMoveLow;
-	static int finalDepth = 1;
+	static int finalDepth = 5;
 	static int finalDepthLow = 4;
 	Knoten predecessor;
 
@@ -109,8 +109,8 @@ public class Knoten {
 
 			if(!state.isTerminal()) {
 				State.setiAmStarting(false);
-				state = letKIrollLow(state);
-				System.out.println(state);
+				state = letKIroll(state);
+				System.out.println(state.lastMoveOnField);
 				System.out.println();	
 			} else {
 				System.out.println("Its over...");
