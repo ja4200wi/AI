@@ -1,4 +1,8 @@
-  public class State {
+package KI_Bohnenspiel;
+
+import java.util.ArrayList;
+
+public class State {
 
 	private int[] bohnenFeld = new int[12]; // index 0-5 rot; 6-11 blau
 	private int scoreBlue;
@@ -40,19 +44,19 @@
 	}
 
 	// Return only the pits of board which belong to red player (0-5)
-	public static int[] getRedPits(State s) {
+	public int[] getRedPits() {
 		int[] redPits = new int[6];
 		for (int i = 0; i < 6; i++) {
-			redPits[i] = s.getBohnenFeld()[i];
+			redPits[i] = this.getBohnenFeld()[i];
 		}
 		return redPits;
 	}
 
 	// Return only the pits of board which belong to blue player (6-11)
-	public static int[] getBluePits(State s) {
+	public int[] getBluePits() {
 		int[] redPits = new int[6];
 		for (int i = 6; i < 12; i++) {
-			redPits[i - 6] = s.getBohnenFeld()[i];
+			redPits[i - 6] = this.getBohnenFeld()[i];
 		}
 		return redPits;
 	}
@@ -123,8 +127,8 @@
 	 */
 	public boolean calcTerminal() {
 		boolean result = false;
-		int[] redPits = getRedPits(this);
-		int[] bluePits = getBluePits(this);
+		int[] redPits = getRedPits();
+		int[] bluePits = getBluePits();
 		// If player who is at turn has only 0s it is terminal
 		if (isEmpty(redPits) && this.turn) {
 			result = true;
@@ -236,8 +240,7 @@
 		// Initialisierung Variablen
 		int value = 0; // Güte eines Zustands
 		int[] feld = this.getBohnenFeld();
-		int[] meinFeld = this.getBohnenFeld();
-		int[] gegnerFeld = this.getBohnenFeld();
+		int[] meinFeld = iAmStarting ? this.getRedPits() : this.getBluePits();
 
 		// Hier Parameter über die die Heuristik schnell angepasst werden kann
 		int schatzKistenMulti = 1; // Multiplikator für bereits verteilte Punkte
@@ -250,7 +253,7 @@
 		// int keineMoeg = 0; //für Gegner
 		// int potPunkte = 0; //für Uns @TODO Unterscheidung zwischen wer dran ist
 		int possibleMovesOpp = 6;
-		int beansInPossesion = 0;
+		int beansInPossesion = 0; //
 
 		for (int i = 0; i < meinFeld.length; i++) {
 			beansInPossesion += meinFeld[i];

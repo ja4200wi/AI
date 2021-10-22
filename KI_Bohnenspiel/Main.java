@@ -1,3 +1,5 @@
+package KI_Bohnenspiel;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -11,9 +13,9 @@ public class Main {
 	static int p2 = 0;
 
 	public static void main(String[] args) throws Exception {
-		// System.out.println(load(server));
+		System.out.println(load(server));
 		createGame();
-		// openGames();
+		//openGames();
 		// joinGame("0");
 	}
 
@@ -83,7 +85,9 @@ public class Main {
 				}
 				System.out.println("wir");
 				Knoten k = new Knoten();
+				boolean myColor = offset==0 ? false : true;
 				State state = k.letKIroll(new State(board, false, 0, 0));
+				State.setiAmStarting(myColor);
 				move(gameID, state.lastMoveOnField + 1);
 				
 				System.out.println(state.lastMoveOnField + 1);
