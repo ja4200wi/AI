@@ -7,7 +7,7 @@ import java.net.URI;
 public class Main {
 
 	static String server = "http://bohnenspiel.informatik.uni-mannheim.de";
-	static String name = "test";
+	static String name = "mr.bean";
 
 	static int p1 = 0;
 	static int p2 = 0;
