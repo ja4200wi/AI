@@ -15,7 +15,10 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		//System.out.println(load(server));
 		createGame();
-		//openGames();
+		/*String [] openGames = openGames();
+		if(openGames.length>0) {
+			joinGame(openGames[0]);
+		}*/
 		//joinGame("2479");
 	}
 
@@ -39,12 +42,12 @@ public class Main {
 		play(gameID, 0);
 	}
 
-	static void openGames() throws Exception {
+	static String[] openGames() throws Exception {
 		String url = server + "/api/opengames";
 		String[] opengames = load(url).split(";");
 		for (int i = 0; i < opengames.length; i++) {
 			System.out.println(opengames[i]);
-		}
+		} return opengames;
 	}
 
 	static void joinGame(String gameID) throws Exception {
@@ -83,21 +86,13 @@ public class Main {
 					System.out.println("Gegner wï¿½hlte: " + moveState + " /\t" + p1 + " - " + p2);
 					System.out.println(printBoard(board) + "\n");
 				}
-				System.out.println("wir");
 				Knoten k = new Knoten();
-				System.out.println(printBoard(board));
 				boolean myColor = offset==0 ? true : false; // muss eigtl andersrum sein
-				System.out.println("Ich bin " + myColor);
 				State.setiAmStarting(myColor);
 				State state = k.letKIroll(new State(board, myColor, p1, p2));
-				System.out.println("Welchen state wir schicken: \n" + state);
-				//State.setOffset(offset);
+				System.out.println("State hat Schatzkisten: Blau - " + state.getScoreBlue() + " Rot - " + state.getScoreRed() + " " + state.heuristic007());
 				board = updateBoard(board, state.lastMoveOnField);
-				System.out.println(printBoard(board));
 				move(gameID, state.lastMoveOnField + 1);
-
-				System.out.println(state.lastMoveOnField + 1);
-				System.out.println("moveState " + moveState);
 			} else if (moveState == -2 || stateID == 2) {
 				System.out.println("GAME Finished");
 				checkURL = server + "/api/statemsg/" + gameID;

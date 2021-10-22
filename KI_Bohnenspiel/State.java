@@ -12,7 +12,6 @@ public class State {
   private int value; // Heuristik Wert des Zustandes
   static private boolean iAmStarting = true;
   int lastMoveOnField;
-  static int offset;
 
   public State() {
     for (int i = 0; i < 12; i++) {
@@ -106,22 +105,10 @@ public class State {
   }
 
   public static void main(String[] args) {
-    /*State state = new State();
-    ArrayList<State> states = state.getPossibleMoves();
-    for (State s : states) {
-      System.out.print(s);
-      System.out.println("\n");
-    }*/
-    State state = new State();
-    ArrayList<State> states = state.getPossibleMoves();
-    for (State s : states) {
-      System.out.print(s);
-      System.out.println("\n");
-      s.makeAMove(3);
-      System.out.println("make a move: " + "\n " + s);
-      System.out.println("field" + s.lastMoveOnField);
-      System.out.println("\n");
-    }
+    int[] test = {1,1,1,1,1,1,8,8,8,8,8,8};
+    State state = new State(test,true,0,0);
+    state.makeAMove(0);
+    System.out.println(Main.printBoard(state.bohnenFeld) + " " + state.scoreBlue + state.scoreRed);
   }
 
   public boolean isTerminal() {
@@ -211,6 +198,7 @@ public class State {
   public void makeAMove(int place) {
     //this.turn = !this.turn; // added by philipp, is nicht doppelt oder?
     int bohnen = 0;
+    int startField = place;
 
       bohnen = this.bohnenFeld[place];
       this.bohnenFeld[place] = 0;
@@ -230,23 +218,26 @@ public class State {
     // System.out.println("this.bohnenfeld at place+i mit ++: " +
     // this.bohnenFeld[(place + i) % 12]++);
     //}
-    int lastPlace = place + bohnen; // wo wir uns danach befinden
+    int lastPlace = (place + bohnen) % 12; // wo wir uns danach befinden
     // TODO Punkte verteilen wenn bohnenFeld an lastPlace 2,4,6
+    if (bohnenFeld[lastPlace] == 2 || bohnenFeld[lastPlace] == 4 || bohnenFeld[lastPlace] == 6) {
+      do {
+        if (startField < 6) {
+          scoreRed += bohnenFeld[lastPlace];
+        } else {
+          scoreBlue += bohnenFeld[lastPlace];
+        }
+        bohnenFeld[lastPlace] = 0;
+        lastPlace = (lastPlace == 0) ? lastPlace = 11 : --lastPlace;
+      } while (bohnenFeld[lastPlace] == 2 || bohnenFeld[lastPlace] == 4 || bohnenFeld[lastPlace] == 6);
+    }
+    lastPlace = place + bohnen; // wo wir uns danach befinden
+
     if (this.bohnenFeld[lastPlace % 12] == 2 || this.bohnenFeld[lastPlace % 12] == 4
         || this.bohnenFeld[lastPlace % 12] == 6) {
-      if (this.turn) {
-        this.scoreRed += this.bohnenFeld[lastPlace % 12];
-      } else {
-        this.scoreBlue += this.bohnenFeld[lastPlace % 12];
-      }
       for(int i = (lastPlace % 12); i >= 0; i--) {
         if (this.bohnenFeld[i] == 2 || this.bohnenFeld[i] == 4
             || this.bohnenFeld[i] == 6) {
-          if (this.turn) {
-            this.scoreRed += this.bohnenFeld[i];
-          } else {
-            this.scoreBlue += this.bohnenFeld[i];
-          }
           this.bohnenFeld[i] = 0;
         } else {
           i = -1;
@@ -269,7 +260,7 @@ public class State {
     int[] gegFeld = !iAmStarting ? this.getRedPits() : this.getBluePits();
 
     // Hier Parameter über die die Heuristik schnell angepasst werden kann
-    int schatzKistenMulti = 1; // Multiplikator für bereits verteilte Punkte
+    int schatzKistenMulti = 10; // Multiplikator für bereits verteilte Punkte
     int beansInPossMulti = 1; // Multiplikator für Bohnen auf eigenen Feldern
     int gegNullFeldMulti = 1; // Multiplikator für 0 Felder des Gegners
 
@@ -388,7 +379,11 @@ public class State {
     State.iAmStarting = iAmStarting;
   }
 
-  public static void setOffset(int offset) {
-    State.offset = offset;
+  public int getScoreBlue() {
+    return scoreBlue;
+  }
+
+  public int getScoreRed() {
+    return scoreRed;
   }
 }

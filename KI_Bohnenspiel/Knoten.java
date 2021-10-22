@@ -14,6 +14,7 @@ public class Knoten {
 
 	boolean isLeaf;
 	State state;
+	int value;
 
 	ArrayList<Knoten> children = new ArrayList<>();
 
@@ -48,6 +49,7 @@ public class Knoten {
 
 	int max(int depth) {
 		if (depth == 0 || this.state.calcTerminal()) {
+			this.value = this.state.heuristic007();
 			return this.state.heuristic007();
 		}
 		int maxWert = -100000000;
@@ -68,6 +70,7 @@ public class Knoten {
 
 	int min(int depth) {
 		if (depth == 0 || this.state.calcTerminal()) {
+			this.value = this.state.heuristic007();
 			return this.state.heuristic007();
 		}
 		int minWert = +10000;
@@ -93,7 +96,6 @@ public class Knoten {
 		if (bestNextMove == null) {
 			System.out.println("Its over...");
 		}
-		System.out.println("ist KI rot?? " + !state.isTurn());
 		return bestNextMove.state;
 	}
 
