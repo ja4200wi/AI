@@ -13,7 +13,7 @@ public class Main {
 	static int p2 = 0;
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(load(server));
+		//System.out.println(load(server));
 		createGame();
 		//openGames();
 		// joinGame("0");
@@ -85,8 +85,10 @@ public class Main {
 				}
 				System.out.println("wir");
 				Knoten k = new Knoten();
-				boolean myColor = offset==0 ? false : true;
+				boolean myColor = offset==0 ? true : false;
+				System.out.println("Ich bin " + myColor);
 				State state = k.letKIroll(new State(board, false, 0, 0));
+				State.setOffset(offset);
 				State.setiAmStarting(myColor);
 				move(gameID, state.lastMoveOnField + 1);
 				

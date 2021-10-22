@@ -12,6 +12,7 @@ public class State {
 	private int value; // Heuristik Wert des Zustandes
 	static private boolean iAmStarting = true;
 	int lastMoveOnField;
+	static int offset;
 
 	public State() {
 		for (int i = 0; i < 12; i++) {
@@ -297,10 +298,16 @@ public class State {
 	 */
 	public ArrayList<State> getPossibleMoves() {
 		ArrayList<State> possibleMoves = new ArrayList<>();
-		int base = 6;
-		if (!this.turn) {
-			base = 0;
+		/*int base = 0;
+		if((!this.turn && iAmStarting) || (this.turn && !iAmStarting)){
+			base = 6;
+		}*/
+		int base = 0;
+		if(offset == 0) base = 6;
+		if(!this.turn) {
+			base += 6;
 		}
+		if(base>11) base = 0;
 		for (int x = 0; x < 6; x++) {
 			State clone = this.clone();
 			clone.makeAMove(base + x);
@@ -350,5 +357,9 @@ public class State {
 
 	public static void setiAmStarting(boolean iAmStarting) {
 		State.iAmStarting = iAmStarting;
+	}
+
+	public static void setOffset(int offset) {
+		State.offset = offset;
 	}
 }
