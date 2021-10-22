@@ -7,18 +7,18 @@ import java.net.URI;
 public class Main {
 
 	static String server = "http://bohnenspiel.informatik.uni-mannheim.de";
-	static String name = "mr.bean";
+	static String name = "mr.bean2";
 
 	static int p1 = 0;
 	static int p2 = 0;
 
 	public static void main(String[] args) throws Exception {
 		//System.out.println(load(server));
-		createGame();
-		/*String [] openGames = openGames();
+		//createGame();
+		String [] openGames = openGames();
 		if(openGames.length>0) {
 			joinGame(openGames[0]);
-		}*/
+		}
 		//joinGame("2479");
 	}
 

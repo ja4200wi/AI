@@ -94,6 +94,10 @@ public class Knoten {
 		Knoten startingKnot = getFirstKnot(state);
 		startingKnot.max(finalDepth);
 		if (bestNextMove == null) {
+			ArrayList<State> geht = state.getPossibleMoves();
+			if(geht.size()>0) {
+				return geht.get(0);
+			}
 			System.out.println("Its over...");
 		}
 		return bestNextMove.state;
