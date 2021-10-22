@@ -199,7 +199,7 @@ public class State {
 	}
 
 	public void makeAMove(int place) {
-		this.turn = !this.turn; // added by philipp, is nicht doppelt oder?
+		//this.turn = !this.turn; // added by philipp, is nicht doppelt oder?
 		int bohnen = 0;
 		/*
 		 * if(moveIsValid(place)) { bohnen = this.bohnenFeld[place]; for(int i = 1; i <=
@@ -291,7 +291,7 @@ public class State {
 	}
 
 	/*
-	 * diese methode gibt all die states zurück die der spieleer, der gerade dran
+	 * diese methode gibt all die states zurück die der spieler, der gerade dran
 	 * ist durch ein klicken erreichen kann.
 	 */
 	public ArrayList<State> getPossibleMoves() {
@@ -300,16 +300,20 @@ public class State {
 		if((!this.turn && iAmStarting) || (this.turn && !iAmStarting)){
 			base = 6;
 		}*/
-		int base = 0;
+		/*int base = 0;
 		if(offset == 0) base = 6;
 		if(!this.turn) {
 			base += 6;
-		}
-		if(base>11) base = 0;
+		}*/
+		int base = turn ? 6 : 0;
+		//if(base>11) base = 0;
 		for (int x = 0; x < 6; x++) {
-			State clone = this.clone();
-			clone.makeAMove(base + x);
-			possibleMoves.add(clone);
+			if(this.bohnenFeld[x]!=0) {
+				State clone = this.clone();
+				clone.turn = !turn;
+				clone.makeAMove(base + x);
+				possibleMoves.add(clone);
+			}
 			/*
 			 * if(this.moveIsValid(base+x)){ State clone = this.clone();
 			 * clone.makeAMove(base+x); possibleMoves.add(clone); }

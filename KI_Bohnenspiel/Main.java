@@ -85,14 +85,17 @@ public class Main {
 				}
 				System.out.println("wir");
 				Knoten k = new Knoten();
+				System.out.println(printBoard(board));
 				boolean myColor = offset==0 ? true : false; // muss eigtl andersrum sein
 				System.out.println("Ich bin " + myColor);
-				State state = k.letKIroll(new State(board, false, 0, 0));
-				System.out.println("Welchen state wir bekommen: " + state);
-				State.setOffset(offset);
 				State.setiAmStarting(myColor);
+				State state = k.letKIroll(new State(board, false, 0, 0));
+				System.out.println("Welchen state wir schicken: \n" + state);
+				//State.setOffset(offset);
+				board = updateBoard(board, state.lastMoveOnField);
+				System.out.println(printBoard(board));
 				move(gameID, state.lastMoveOnField + 1);
-				
+
 				System.out.println(state.lastMoveOnField + 1);
 				System.out.println("moveState " + moveState);
 			} else if (moveState == -2 || stateID == 2) {
