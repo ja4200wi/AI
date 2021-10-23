@@ -8,7 +8,7 @@ public class Knoten {
 
 	static Knoten bestNextMove;
 	static Knoten bestNextMoveLow;
-	static int finalDepth = 9;
+	static int finalDepth = 7;
 	static int finalDepthLow = 4;
 	Knoten predecessor;
 
