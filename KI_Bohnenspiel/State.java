@@ -9,7 +9,6 @@ public class State {
   private int scoreRed;
   private boolean turn; // true: its reds' turn; false: blue
   private boolean terminal;
-  private int value; // Heuristik Wert des Zustandes
   static private boolean iAmStarting = true;
   int lastMoveOnField;
 

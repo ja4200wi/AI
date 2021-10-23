@@ -8,13 +8,12 @@ public class Knoten {
 
 	static Knoten bestNextMove;
 	static Knoten bestNextMoveLow;
-	static int finalDepth = 5;
+	static int finalDepth = 9;
 	static int finalDepthLow = 4;
 	Knoten predecessor;
 
 	boolean isLeaf;
 	State state;
-	int value;
 
 	ArrayList<Knoten> children = new ArrayList<>();
 
@@ -49,7 +48,6 @@ public class Knoten {
 
 	int max(int depth) {
 		if (depth == 0 || this.state.calcTerminal()) {
-			this.value = this.state.heuristic007();
 			return this.state.heuristic007();
 		}
 		int maxWert = -100000000;
@@ -70,7 +68,6 @@ public class Knoten {
 
 	int min(int depth) {
 		if (depth == 0 || this.state.calcTerminal()) {
-			this.value = this.state.heuristic007();
 			return this.state.heuristic007();
 		}
 		int minWert = +10000;
