@@ -16,7 +16,6 @@ public class State {
     for (int i = 0; i < 12; i++) {
       this.bohnenFeld[i] = 6;
     }
-    // this.bohnenFeld = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     this.scoreBlue = 0;
     this.scoreRed = 0;
     this.turn = false;
@@ -174,11 +173,9 @@ public class State {
     if (this.turn) {
       // its reds' turn
       if (place < 0 || place > 5) {
-        // invalid da red nicht blauen place auswaehlen darf
         return false;
       }
       if (this.bohnenFeld[place] == 0) {
-        // hier liegen keine Bohnen zum verteilen --> invalid
         return false;
       }
       return true;
@@ -195,7 +192,6 @@ public class State {
   }
 
   public void makeAMove(int place) {
-    //this.turn = !this.turn; // added by philipp, is nicht doppelt oder?
     int bohnen = 0;
     int startField = place;
 
@@ -205,20 +201,7 @@ public class State {
         this.bohnenFeld[(place + i) % 12]++;
       }
 
-    //bohnen = this.bohnenFeld[place];
-    //for (int i = 1; i <= bohnen; i++) {
-    //int help = (this.bohnenFeld[(place + i) % 12]) + 1;
-    // System.out.println("this.bohnenfeld at place+i: " + this.bohnenFeld[(place +
-    // i) % 12] + " place+i: " + (place+i));
-    //this.bohnenFeld[(place + i) % 12]++;
-    // System.out.println("was es rein macht: " + help);
-    // System.out.println("wo es das rein macht: " + (place + i));
-    // System.out.println("state: " + this);
-    // System.out.println("this.bohnenfeld at place+i mit ++: " +
-    // this.bohnenFeld[(place + i) % 12]++);
-    //}
     int lastPlace = (place + bohnen) % 12; // wo wir uns danach befinden
-    // TODO Punkte verteilen wenn bohnenFeld an lastPlace 2,4,6
     if (bohnenFeld[lastPlace] == 2 || bohnenFeld[lastPlace] == 4 || bohnenFeld[lastPlace] == 6) {
       do {
         if (startField < 6) {
@@ -230,7 +213,7 @@ public class State {
         lastPlace = (lastPlace == 0) ? lastPlace = 11 : --lastPlace;
       } while (bohnenFeld[lastPlace] == 2 || bohnenFeld[lastPlace] == 4 || bohnenFeld[lastPlace] == 6);
     }
-    lastPlace = place + bohnen; // wo wir uns danach befinden
+    //lastPlace = place + bohnen; // wo wir uns danach befinden
 
     if (this.bohnenFeld[lastPlace % 12] == 2 || this.bohnenFeld[lastPlace % 12] == 4
         || this.bohnenFeld[lastPlace % 12] == 6) {
@@ -243,8 +226,6 @@ public class State {
         }
       }
       this.bohnenFeld[lastPlace % 12] = 0;
-      // setTerminality --> schauen ob generell dann Spiel vorbei und this.termianl
-      // setzen
     }
     this.lastMoveOnField = place;
 
@@ -311,18 +292,9 @@ public class State {
    */
   public ArrayList<State> getPossibleMoves() {
     ArrayList<State> possibleMoves = new ArrayList<>();
-		/*int base = 0;
-		if((!this.turn && iAmStarting) || (this.turn && !iAmStarting)){
-			base = 6;
-		}*/
-		/*int base = 0;
-		if(offset == 0) base = 6;
-		if(!this.turn) {
-			base += 6;
-		}*/
+
     int base = !turn ? 6 : 0;
     Main.printBoard(this.bohnenFeld);
-    //if(base>11) base = 0;
     for (int x = 0; x < 6; x++) {
       if (this.bohnenFeld[(base + x)] != 0) {
         State clone = this.clone();
@@ -330,10 +302,6 @@ public class State {
         clone.makeAMove(base + x);
         possibleMoves.add(clone);
       }
-      /*
-       * if(this.moveIsValid(base+x)){ State clone = this.clone();
-       * clone.makeAMove(base+x); possibleMoves.add(clone); }
-       */
     }
     return possibleMoves;
   }
