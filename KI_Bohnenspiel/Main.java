@@ -7,7 +7,7 @@ import java.net.URI;
 public class Main {
 
 	static String server = "http://bohnenspiel.informatik.uni-mannheim.de";
-	static String name = "mr.bean2";
+	static String name = "mr.bean";
 
 	static int p1 = 0;
 	static int p2 = 0;
@@ -76,7 +76,7 @@ public class Main {
 		}
 
 		while (true) {
-			Thread.sleep(1000);
+			Thread.sleep(100);
 			int moveState = Integer.parseInt(load(checkURL));
 			int stateID = Integer.parseInt(load(stateIdURL));
 			if (stateID != 2 && ((start <= moveState && moveState <= end) || moveState == -1)) {
