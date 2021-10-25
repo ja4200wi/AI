@@ -7,9 +7,7 @@ import java.util.Iterator;
 public class Knoten {
 
 	static Knoten bestNextMove;
-	static Knoten bestNextMoveLow;
-	static int finalDepth = 7;
-	static int finalDepthLow = 4;
+	static int finalDepth = 1;
 	Knoten predecessor;
 
 	boolean isLeaf;
@@ -17,6 +15,8 @@ public class Knoten {
 
 	ArrayList<Knoten> children = new ArrayList<>();
 
+
+	//returns the first knot of a tree with the given state parameter
 	static Knoten getFirstKnot(State state) {
 		Knoten first = new Knoten();
 		first.state = state;
@@ -25,6 +25,7 @@ public class Knoten {
 		return first;
 	}
 
+	//appends and returns a child knot
 	Knoten appendKnot(State state) {
 		Knoten child = new Knoten();
 		child.isLeaf = true;
@@ -37,6 +38,8 @@ public class Knoten {
 		return child;
 	}
 
+	// tuns the states of getMove method in state into knots,
+  // which are child knots of the initial state
 	ArrayList<Knoten> getPossibleMovesAsKnots() {
 		ArrayList<State> movesAsState = this.state.getPossibleMoves();
 		Iterator<State> iterator = movesAsState.iterator();
@@ -86,6 +89,7 @@ public class Knoten {
 		return minWert;
 	}
 
+	//initiates the AI and returns the best next move
 	static State letKIroll(State state) {
 		bestNextMove = null;
 		Knoten startingKnot = getFirstKnot(state);
@@ -100,29 +104,7 @@ public class Knoten {
 		return bestNextMove.state;
 	}
 
-	public static void main(String[] args) {
-		State state = new State();
-
-		int moves = 0;
-		while (!state.isTerminal() && moves < 35) {
-			moves++;
-
-			state = someNextMove(state);
-			System.out.println(state);
-
-			if(!state.isTerminal()) {
-				State.setiAmStarting(false);
-				state = letKIroll(state);
-				System.out.println(state.lastMoveOnField);
-				System.out.println();	
-			} else {
-				System.out.println("Its over...");
-			}
-			System.out.println(state.getGameStats());
-			System.out.println();
-		}
-	}
-
+	//test method to play against an opponent that plays random moves
 	static State someNextMove(State state) {
 		ArrayList<State> posMoves = state.getPossibleMoves();
 		if(posMoves.isEmpty()) {
@@ -131,57 +113,5 @@ public class Knoten {
 			return state;
 		}
 		return posMoves.get((int) Math.random() * posMoves.size());
-	}
-
-	// lowlights
-
-	static State letKIrollLow(State state) {
-		bestNextMoveLow = null;
-		Knoten startingKnot = getFirstKnot(state);
-		startingKnot.maxLow(finalDepthLow);
-		if (bestNextMoveLow == null) {
-			System.out.println("Its over...");
-		}
-		return bestNextMoveLow.state;
-	}
-
-	int maxLow(int depth) {
-		if (depth == 0 || this.state.isTerminal()) {
-			return this.state.heuristic();
-		}
-		int maxWert = -100000;
-		ArrayList<Knoten> posMoves = getPossibleMovesAsKnots();
-		Iterator<Knoten> iterator = posMoves.iterator();
-		while (iterator.hasNext()) {
-			Knoten k = iterator.next();
-			int wert = k.minLow(depth - 1);
-			if (wert > maxWert) {
-				maxWert = wert;
-				if (depth == finalDepthLow) {
-					bestNextMoveLow = k;
-				}
-			}
-		}
-		return maxWert;
-	}
-
-	int minLow(int depth) {
-		if (depth == 0 || this.state.isTerminal()) {
-			return this.state.heuristic();
-		}
-		int minWert = +1000;
-		ArrayList<Knoten> posMoves = getPossibleMovesAsKnots();
-		Iterator<Knoten> iterator = posMoves.iterator();
-		while (iterator.hasNext()) {
-			Knoten k = iterator.next();
-			int wert = k.maxLow(depth - 1);
-			if (wert < minWert) {
-				minWert = wert;
-				if (depth == finalDepthLow) {
-					bestNextMoveLow = k;
-				}
-			}
-		}
-		return minWert;
 	}
 }

@@ -12,6 +12,7 @@ public class State {
 	static private boolean iAmStarting = true;
 	int lastMoveOnField;
 
+	//Creates the starting field of a Bohnenspiel
 	public State() {
 		for (int i = 0; i < 12; i++) {
 			this.bohnenFeld[i] = 6;
@@ -21,6 +22,7 @@ public class State {
 		this.turn = false;
 	}
 
+	//Creates certain states of the game with the input parameters
 	public State(int[] state, boolean turn, int punkteRot, int punkteBlau) {
 		for (int i = 0; i < state.length; i++) {
 			this.bohnenFeld[i] = state[i];
@@ -59,14 +61,6 @@ public class State {
 		return redPits;
 	}
 
-	public int heuristic() {
-		if (iAmStarting) {
-			return this.scoreRed - this.scoreBlue;
-		} else {
-			return this.scoreBlue - this.scoreRed;
-		}
-	}
-
 	// berechnet die Punkte die es für den neu erreichten Zustand gibt
 	public int pointsForState(int lastPlace) {
 		int last = bohnenFeld[lastPlace];
@@ -83,14 +77,6 @@ public class State {
 			}
 		}
 		return points;
-	}
-
-	public boolean isTerminal() {
-		return this.terminal;
-	}
-
-	public void setTerminal() {
-		this.terminal = true;
 	}
 
 	/*
@@ -116,6 +102,7 @@ public class State {
 		return result;
 	}
 
+	// checks if two objects are representing the same state of the game
 	public boolean equals(Object o) {
 		State state = (State) o;
 		if (this.turn != state.turn) {
@@ -132,6 +119,7 @@ public class State {
 		return false;
 	}
 
+	//for the task of the week prior
 	public int hashCode() {
 		int a = 0;
 		for (int i : this.bohnenFeld) {
@@ -144,29 +132,8 @@ public class State {
 		}
 	}
 
-	// checks if the move that the AI wants to do is valid
-	public boolean moveIsValid(int place) {
-		if (this.turn) {
-			// its reds' turn
-			if (place < 0 || place > 5) {
-				return false;
-			}
-			if (this.bohnenFeld[place] == 0) {
-				return false;
-			}
-			return true;
-		} else {
-			// it's blues' turn
-			if (place < 6 || place > 11) {
-				return false;
-			}
-			if (this.bohnenFeld[place] == 0) {
-				return false;
-			}
-			return true;
-		}
-	}
-
+	//the selected state is turned into the state, that the game would have,
+  // if you would klick on the given place on the field
 	public void makeAMove(int place) {
 		int bohnen = 0;
 		int startField = place;
@@ -205,6 +172,8 @@ public class State {
 
 	}
 
+	//this creates the heuristik, that our AI is based on.
+  // See the comments in the heuristic to find out more about the parameters involved
 	public int heuristic007() {
 		// Initialisierung Variablen
 		int value = 0; // Güte eines Zustands
@@ -238,28 +207,6 @@ public class State {
 		return value;
 	}
 
-	public String toString() {
-		String output = "";
-		for (int i = 11; i >= 6; i--) {
-			if (i != 6) {
-				output += this.bohnenFeld[i] + "; ";
-			} else {
-				output += this.bohnenFeld[i];
-			}
-		}
-
-		output += "\n";
-		for (int i = 0; i <= 5; i++) {
-			if (i != 5) {
-				output += this.bohnenFeld[i] + "; ";
-			} else {
-				output += this.bohnenFeld[i];
-			}
-		}
-
-		return output;
-	}
-
 	/*
 	 * diese methode gibt all die states zurück die der spieler, der gerade dran ist
 	 * durch ein klicken erreichen kann.
@@ -280,6 +227,7 @@ public class State {
 		return possibleMoves;
 	}
 
+	//returns a deep copy of a state
 	public State clone() {
 		State clone = new State();
 		for (int i = 0; i < 12; i++) {
@@ -293,28 +241,46 @@ public class State {
 		return clone;
 	}
 
-	public int amountOfPosMoves() {
-		int count = 0;
-		int i = this.turn ? 0 : 5;
-		for (int x = 0; x < 6; x++) {
-			if (this.bohnenFeld[i + x] > 0) {
-				count++;
-			}
-		}
-		return count;
-	}
+
+	// getters, setters and toString's
+
+  public String toString() {
+    String output = "";
+    for (int i = 11; i >= 6; i--) {
+      if (i != 6) {
+        output += this.bohnenFeld[i] + "; ";
+      } else {
+        output += this.bohnenFeld[i];
+      }
+    }
+
+    output += "\n";
+    for (int i = 0; i <= 5; i++) {
+      if (i != 5) {
+        output += this.bohnenFeld[i] + "; ";
+      } else {
+        output += this.bohnenFeld[i];
+      }
+    }
+
+    return output;
+  }
 
 	public int[] getBohnenFeld() {
 		return this.bohnenFeld;
 	}
 
-	public boolean isTurn() {
-		return turn;
-	}
-
 	String getGameStats() {
 		return "Red: " + this.scoreRed + "\tBlue: " + this.scoreBlue;
 	}
+
+  public boolean isTerminal() {
+    return this.terminal;
+  }
+
+  public void setTerminal() {
+    this.terminal = true;
+  }
 
 	public static void setiAmStarting(boolean iAmStarting) {
 		State.iAmStarting = iAmStarting;

@@ -13,7 +13,6 @@ public class Main {
 	static int p2 = 0;
 
 	public static void main(String[] args) throws Exception {
-		//System.out.println(load(server));
 		//createGame();
 		String [] openGames = openGames();
 		if(openGames.length>0) {
