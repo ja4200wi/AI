@@ -61,24 +61,6 @@ public class State {
 		return redPits;
 	}
 
-	// berechnet die Punkte die es für den neu erreichten Zustand gibt
-	public int pointsForState(int lastPlace) {
-		int last = bohnenFeld[lastPlace];
-		int points = 0;
-		if (last == 2 || last == 4 || last == 6) {
-			points += last;
-			for (int i = lastPlace - 1; i >= 0; i--) {
-				int help = bohnenFeld[i];
-				if (help == 2 || help == 4 || help == 6) {
-					points += help;
-				} else {
-					return points;
-				}
-			}
-		}
-		return points;
-	}
-
 	/*
 	 * Method identifies, whether the given State checkTerminal is terminal or not.
 	 * If the state is terminal return true.
