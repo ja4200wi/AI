@@ -7,7 +7,7 @@ import java.util.Iterator;
 public class Knoten {
 
 	static Knoten bestNextMove;
-	static int finalDepth = 1;
+	static int finalDepth = 9;
 	Knoten predecessor;
 
 	boolean isLeaf;

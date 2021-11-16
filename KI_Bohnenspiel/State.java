@@ -166,7 +166,7 @@ public class State {
 
 		// Hier Parameter über die die Heuristik schnell angepasst werden kann
 		int schatzKistenMulti = 10; // Multiplikator für bereits verteilte Punkte
-		int beansInPossMulti = 1; // Multiplikator für Bohnen auf eigenen Feldern
+		int beansInPossMulti = 10; // Multiplikator für Bohnen auf eigenen Feldern
 		int gegNullFeldMulti = 1; // Multiplikator für 0 Felder des Gegners
 
 		// Hier grundlegende Parameter

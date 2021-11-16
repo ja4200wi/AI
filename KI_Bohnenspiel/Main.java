@@ -13,12 +13,12 @@ public class Main {
 	static int p2 = 0;
 
 	public static void main(String[] args) throws Exception {
-		//createGame();
-		String [] openGames = openGames();
+		createGame();
+		/*String [] openGames = openGames();
 		if(openGames.length>0) {
 			joinGame(openGames[0]);
-		}
-		//joinGame("2479");
+		}*/
+		//joinGame("3862");
 	}
 
 	static void createGame() throws Exception {
@@ -28,9 +28,9 @@ public class Main {
 
 		url = server + "/api/check/" + gameID + "/" + name;
 		while (true) {
-			Thread.sleep(3000);
+			Thread.sleep(200);
 			String state = load(url);
-			System.out.print("." + " (" + state + ")");
+			//System.out.print("." + " (" + state + ")");
 			if (state.equals("0") || state.equals("-1")) {
 				break;
 			} else if (state.equals("-2")) {
