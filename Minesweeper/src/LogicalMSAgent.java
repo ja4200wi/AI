@@ -80,6 +80,71 @@ public class LogicalMSAgent extends MSAgent {
     }
   }
 
+  private ArrayList<Integer> getNeighbours(int x, int y){
+    ArrayList<Integer> neighbours = new ArrayList<Integer>();
+
+    if(x == 0 && y == 0){
+      // linke obere Ecke
+      neighbours.add(Tile.findName(1,0));
+      neighbours.add(Tile.findName(1,1));
+      neighbours.add(Tile.findName(0,1));
+    } else if(x == 0 && y == numOfRows){
+      // linke untere Ecke
+      neighbours.add(Tile.findName(0, y-1));
+      neighbours.add(Tile.findName(1,y-1));
+      neighbours.add(Tile.findName(1,y));
+    } else if(x == numOfCols && y == 0){
+      // rechte obere Ecke
+      neighbours.add(Tile.findName(x-1,0));
+      neighbours.add(Tile.findName(x-1,1));
+      neighbours.add(Tile.findName(x,1));
+    } else if(x == numOfCols && y == numOfRows){
+      // recht untere Ecke
+      neighbours.add(Tile.findName(x,y-1));
+      neighbours.add(Tile.findName(x-1,y-1));
+      neighbours.add(Tile.findName(x-1,y));
+    } else if(x == 0){
+      // linker Rand
+      neighbours.add(Tile.findName(0,y-1));
+      neighbours.add(Tile.findName(1,y-1));
+      neighbours.add(Tile.findName(1,y));
+      neighbours.add(Tile.findName(1,y+1));
+      neighbours.add(Tile.findName(0,y+1));
+    } else if(x == numOfCols){
+      // rechter Rand
+      neighbours.add(Tile.findName(x,y-1));
+      neighbours.add(Tile.findName(x,y+1));
+      neighbours.add(Tile.findName(x-1,y-1));
+      neighbours.add(Tile.findName(x-1,y));
+      neighbours.add(Tile.findName(x-1,y+1));
+    } else if(y == 0){
+      // oberer Rand
+      neighbours.add(Tile.findName(x-1,y));
+      neighbours.add(Tile.findName(x-1,y+1));
+      neighbours.add(Tile.findName(x,y+1));
+      neighbours.add(Tile.findName(x+1,y+1));
+      neighbours.add(Tile.findName(x+1,y));
+    } else if(y == numOfRows){
+      // unterer Rand
+      neighbours.add(Tile.findName(x-1,y));
+      neighbours.add(Tile.findName(x-1,y-1));
+      neighbours.add(Tile.findName(x,y-1));
+      neighbours.add(Tile.findName(x+1,y-1));
+      neighbours.add(Tile.findName(x+1,y));
+    } else {
+      // das Ding ist in der Mitte
+      neighbours.add(Tile.findName(x-1,y-1));
+      neighbours.add(Tile.findName(x,y-1));
+      neighbours.add(Tile.findName(x+1,y-1));
+      neighbours.add(Tile.findName(x-1,y));
+      neighbours.add(Tile.findName(x+1,y));
+      neighbours.add(Tile.findName(x-1,y+1));
+      neighbours.add(Tile.findName(x,y+1));
+      neighbours.add(Tile.findName(x+1,y+1));
+    }
+    return neighbours;
+  }
+
   public void extendKB(int feedback,int x,int y) {
     int neighbours = 0;
     if(feedback>=0){
@@ -89,12 +154,17 @@ public class LogicalMSAgent extends MSAgent {
       if(tile==1 || tile == (numOfCols * numOfRows) || tile == (numOfCols) || tile == (numOfCols * numOfRows - (numOfCols-1))) {
         // Eckfeld -> 3 Nachbarn
         neighbours = 3;
+        ArrayList<Integer> allNeighbours = getNeighbours(x,y);
+        // 0 1 2 3 Minen drum herum
+
       } else if (x == 0 || y == 0 || x == numOfCols || y == numOfRows){
         //Randfeld -> 5 Nachbarn
         neighbours = 5;
+        ArrayList<Integer> allNeighbours = getNeighbours(x,y);
       } else {
         //Mitte -> 8 Nachbarn
         neighbours = 8;
+        ArrayList<Integer> allNeighbours = getNeighbours(x,y);
       }
     }
   }

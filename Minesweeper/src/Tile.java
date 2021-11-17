@@ -11,6 +11,12 @@ public class Tile {
     this.countNeighbors = count;
   }
 
+  public static int findName(int x, int y){
+    int name = 0;
+    // TODO
+    return name;
+  }
+
   public boolean isBomb(){
     return isBomb;
   }
