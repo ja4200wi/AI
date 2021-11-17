@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="sat4j-core-v20130525">
     <CLASSES>
-      <root url="file://$USER_HOME$/Downloads/sat4j-core-v20130525" />
+      <root url="file://$USER_HOME$/Desktop/sat4j-core-v20130525" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$USER_HOME$/Downloads/sat4j-core-v20130525" />
+      <root url="file://$USER_HOME$/Desktop/sat4j-core-v20130525" />
     </SOURCES>
-    <jarDirectory url="file://$USER_HOME$/Downloads/sat4j-core-v20130525" recursive="false" />
-    <jarDirectory url="file://$USER_HOME$/Downloads/sat4j-core-v20130525" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$USER_HOME$/Desktop/sat4j-core-v20130525" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Desktop/sat4j-core-v20130525" recursive="false" type="SOURCES" />
   </library>
 </component>

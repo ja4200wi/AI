@@ -81,16 +81,20 @@ public class LogicalMSAgent extends MSAgent {
   }
 
   public void extendKB(int feedback,int x,int y) {
+    int neighbours = 0;
     if(feedback>=0){
       KB.add(new int[] {x + y * numOfCols + 1});
       //Man hat entweder 3,5 oder 8 Nachbarn
       int tile = x + y * numOfCols + 1;
       if(tile==1 || tile == (numOfCols * numOfRows) || tile == (numOfCols) || tile == (numOfCols * numOfRows - (numOfCols-1))) {
         // Eckfeld -> 3 Nachbarn
+        neighbours = 3;
       } else if (x == 0 || y == 0 || x == numOfCols || y == numOfRows){
         //Randfeld -> 5 Nachbarn
+        neighbours = 5;
       } else {
         //Mitte -> 8 Nachbarn
+        neighbours = 8;
       }
     }
   }
