@@ -10,15 +10,13 @@ public class LogicalMSAgent extends MSAgent {
 
   private boolean displayActivated = false;
   private boolean firstDecision = true;
-  private ArrayList<Tile> bombs = new ArrayList<>();
-  private Tile[][] tiles;
+  private ArrayList<int[]> KB;
+  final int MAXVAR;
+  final int NBCLAUSES = 500000;
 
   public LogicalMSAgent(MSField field) {
     super(field);
-  }
-
-  public void updateField(Tile[][] tiles){
-    this.tiles = tiles;
+    MAXVAR = field.getNumOfCols() * field.getNumOfRows();
   }
 
   @Override
@@ -26,7 +24,6 @@ public class LogicalMSAgent extends MSAgent {
     int numOfRows = this.field.getNumOfRows();
     int numOfCols = this.field.getNumOfCols();
     int x, y, feedback;
-    this.updateField(new Tile[numOfCols][numOfRows]);
     do {
       if (displayActivated) {
         System.out.println(field);
@@ -44,6 +41,7 @@ public class LogicalMSAgent extends MSAgent {
       if (displayActivated)
         System.out.println("Uncovering (" + x + "," + y + ")");
       feedback = field.uncover(x, y);
+      extendKB(feedback,x,y);
 
     } while (feedback >= 0 && !field.solved());
 
@@ -61,14 +59,12 @@ public class LogicalMSAgent extends MSAgent {
   }
 
   public void chooseTile(){
-    final int MAXVAR = 1000000;
-    final int NBCLAUSES = 500000;
     ISolver solver = SolverFactory.newDefault();
     solver.newVar(MAXVAR);
     solver.setExpectedNumberOfClauses(NBCLAUSES);
     try {
       for (int i = 0;i<NBCLAUSES;i++){
-        int[] clause = new int[1];// get the clause from somewhere
+        int[] clause = KB.get(i);// get the clause from somewhere
             solver.addClause(new VecInt(clause));
       }
       IProblem problem = solver;
@@ -79,6 +75,13 @@ public class LogicalMSAgent extends MSAgent {
       }
     } catch (Exception e){
 
+    }
+  }
+
+  public void extendKB(int feedback,int x,int y) {
+    if(feedback>=0){
+      //Man hat entweder 3,5 oder 8 Nachbarn
+      
     }
   }
 
