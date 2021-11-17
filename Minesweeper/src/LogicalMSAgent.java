@@ -13,16 +13,18 @@ public class LogicalMSAgent extends MSAgent {
   private ArrayList<int[]> KB;
   final int MAXVAR;
   final int NBCLAUSES = 500000;
+  private int numOfRows;
+  private int numOfCols;
 
   public LogicalMSAgent(MSField field) {
     super(field);
     MAXVAR = field.getNumOfCols() * field.getNumOfRows();
+    numOfRows = this.field.getNumOfRows();
+    numOfCols = this.field.getNumOfCols();
   }
 
   @Override
   public boolean solve() {
-    int numOfRows = this.field.getNumOfRows();
-    int numOfCols = this.field.getNumOfCols();
     int x, y, feedback;
     do {
       if (displayActivated) {
@@ -80,8 +82,16 @@ public class LogicalMSAgent extends MSAgent {
 
   public void extendKB(int feedback,int x,int y) {
     if(feedback>=0){
+      KB.add(new int[] {x + y * numOfCols + 1});
       //Man hat entweder 3,5 oder 8 Nachbarn
-      
+      int tile = x + y * numOfCols + 1;
+      if(tile==1 || tile == (numOfCols * numOfRows) || tile == (numOfCols) || tile == (numOfCols * numOfRows - (numOfCols-1))) {
+        // Eckfeld -> 3 Nachbarn
+      } else if (x == 0 || y == 0 || x == numOfCols || y == numOfRows){
+        //Randfeld -> 5 Nachbarn
+      } else {
+        //Mitte -> 8 Nachbarn
+      }
     }
   }
 
