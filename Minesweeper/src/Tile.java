@@ -1,14 +1,12 @@
 package Minesweeper.src;
 
 public class Tile {
-  private int x;
-  private int y;
+  private int name;
   private boolean isBomb;
   private byte countNeighbors;
 
-  public Tile(int x,int y,boolean isBomb,byte count){
-    this.x = x;
-    this.y = y;
+  public Tile(int name,boolean isBomb,byte count){
+    this.name = name;
     this.isBomb = isBomb;
     this.countNeighbors = count;
   }
