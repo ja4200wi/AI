@@ -131,7 +131,7 @@ public class LogicalMSAgent extends MSAgent {
     solver.setExpectedNumberOfClauses(KB.size()+1);
     try {
       for(int j : e) {
-        solver.addClause(new VecInt(new int[]{j}));
+        solver.addClause(new VecInt(new int[]{j})); // j dachte ich zumindest müsste negativ sein
       for (int i = 0;i<KB.size();i++){
         int[] clause = KB.get(i);// get the clause from somewhere
         solver.addClause(new VecInt(clause));
@@ -278,7 +278,7 @@ public class LogicalMSAgent extends MSAgent {
   Gibt ArrayList mit Klauseln für KNF zurück.
    */
   private ArrayList<int[]> extractModels(int[][] tt,int feedback){
-    ArrayList<int[]> KNF = new ArrayList<int[]>();
+    ArrayList<int[]> KNF = new ArrayList<>();
   for(int[] row : tt){
     int countNeg = 0;
     for(int i : row){
