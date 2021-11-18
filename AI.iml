@@ -12,6 +12,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="sat4j-core-v20130525" level="project" />
+    <orderEntry type="library" name="org.sat4j.core" level="project" />
   </component>
 </module>
