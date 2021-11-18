@@ -27,15 +27,16 @@ public class UsageExample {
 		for (int i = 0; i < iterations; i++) {
 			MSField f = new MSField("Minesweeper/fields/" + fields[1]);
 			MSAgent agent = new RandomMSAgent(f);
+			LogicalMSAgent schlauerKerl = new LogicalMSAgent(f);
 
 			// to see what happens in the first iteration
 			if (i == 0) {
-				agent.activateDisplay();
+				schlauerKerl.activateDisplay();
 			} else {
-				agent.deactivateDisplay();
+				schlauerKerl.deactivateDisplay();
 			}
 
-			boolean solved = agent.solve();
+			boolean solved = schlauerKerl.solve();
 			if (solved) {
 				success++;
 			}

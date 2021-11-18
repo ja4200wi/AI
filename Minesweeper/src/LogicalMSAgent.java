@@ -1,6 +1,7 @@
 package Minesweeper.src;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
@@ -13,7 +14,6 @@ public class LogicalMSAgent extends MSAgent {
   private boolean firstDecision = true;
   private ArrayList<int[]> KB;
   final int MAXVAR;
-  final int NBCLAUSES = 500000;
   private int numOfRows;
   private int numOfCols;
   private ArrayList<Integer> safeTiles;
@@ -25,6 +25,8 @@ public class LogicalMSAgent extends MSAgent {
     numOfRows = this.field.getNumOfRows();
     numOfCols = this.field.getNumOfCols();
     KB = new ArrayList<int[]>();
+    clickedTiles = new ArrayList<>();
+    safeTiles = new ArrayList<>();
   }
 
   public static void main(String[] args) {
@@ -44,7 +46,10 @@ public class LogicalMSAgent extends MSAgent {
     while(it.hasNext()) {
       System.out.print(it.next() + " ");
     }
+    System.out.println();
     testAgent.extendKB(2,1,1);
+    int[] xy = testAgent.findPos(8);
+    for(int i : xy) {System.out.println(i);}
   }
 
   @Override
@@ -60,14 +65,15 @@ public class LogicalMSAgent extends MSAgent {
         firstDecision = false;
         clickedTiles.add(findName(x,y));
       } else {
-        chooseTile();
-        x = 0;
-        y = 0;
-        //clickedTiles.add(findName(x,y));
+        int[] xy = chooseTile();
+        x = xy[0];
+        y = xy[1];
+        clickedTiles.add(findName(x,y));
       }
 
-      if (displayActivated)
+      if (displayActivated) {
         System.out.println("Uncovering (" + x + "," + y + ")");
+      }
       feedback = field.uncover(x, y);
       extendKB(feedback,x,y);
 
@@ -89,26 +95,54 @@ public class LogicalMSAgent extends MSAgent {
   /** Gibt x,y zurück für Position/Feld, das gedrückt werden soll
    */
   public int[] chooseTile(){
+    int chosen;
     int [] result = new int[2]; // result[0] = x, result[1] = y
+    if(safeTiles.size()>0) {
+      chosen = safeTiles.get(safeTiles.size()-1);
+    } else {
+      HashSet<Integer> explore = new HashSet<Integer>();
+      /*for(int i : clickedTiles){
+        int[] xy = findPos(i);
+        explore.addAll(this.getNeighbours(xy[0],xy[1]));
+      }*/
+      for(int i = 1;i<=(numOfCols*numOfRows);i++) {
+        explore.add(i);
+      }
+      explore.removeAll(safeTiles);
+      explore.removeAll(clickedTiles);
+      findSafeTiles(explore); // fügt neue safeTiles der Liste hinzu
+      chosen = safeTiles.get(safeTiles.size()-1);
+    }
+    safeTiles.remove(safeTiles.size()-1);
+    clickedTiles.add(chosen);
+    return findPos(chosen);
+  }
+
+  /** Benutzt SAT4J und KB um sichere Felder zu entdecken.
+   * Alle Felder, die übergeben werden, werden auf Erfüllbarkeit geprüft.
+   * Annahme: Feld i ist frei, dann gilt: KB U !i ist unerfüllbar.
+   */
+  public void findSafeTiles(HashSet<Integer> e) {
     ISolver solver = SolverFactory.newDefault();
     solver.newVar(MAXVAR);
-    solver.setExpectedNumberOfClauses(NBCLAUSES);
+    solver.setExpectedNumberOfClauses(KB.size());
     try {
-      for (int i = 0;i<NBCLAUSES;i++){
+      for (int i = 0;i<KB.size();i++){
         int[] clause = KB.get(i);// get the clause from somewhere
-            solver.addClause(new VecInt(clause));
+        solver.addClause(new VecInt(clause));
       }
-      //for()
+      for(int i : e) {
+        solver.addClause(new VecInt(new int[]{i*-1}));
       IProblem problem = solver;
       if (problem.isSatisfiable()) {
-
+      // Variable konnte nicht bewiesen werde, dass sie keine Bombe sein muss.
       } else {
-
-      }
-    } catch (Exception e){
-
+        safeTiles.add(i);
+      }}
+    } catch (Exception ex){
+      System.out.println("SAT4J Problem occurred" + "\n" + ex.getMessage());
+      ex.printStackTrace();
     }
-    return result;
   }
 
   /** Gibt für Feld an Position x,y den Namen zurück.
@@ -116,6 +150,15 @@ public class LogicalMSAgent extends MSAgent {
    */
   public int findName(int x,int y){
     return x + y * numOfCols + 1;
+  }
+
+  /** Gegenstück zu findName. Aus name werden x und y berechnet.
+   */
+  public int[] findPos(int name) {
+    int y = (name-1) / numOfCols;
+    int x = name % numOfCols - 1;
+    if(x==-1) {x=numOfCols-1;}
+    return new int[]{x,y};
   }
 
   /** Nimmt x,y und gibt alle Nachbarn um das Feld als AraryList mit int zurück.
