@@ -17,30 +17,24 @@ public class LogicalMSAgent extends MSAgent {
   private int numOfRows;
   private int numOfCols;
   private ArrayList<Integer> safeTiles;
-  private ArrayList<Integer> clickedTiles = new ArrayList<>();
+  private ArrayList<Integer> clickedTiles;
 
   public LogicalMSAgent(MSField field) {
     super(field);
     MAXVAR = field.getNumOfCols() * field.getNumOfRows();
     numOfRows = this.field.getNumOfRows();
     numOfCols = this.field.getNumOfCols();
-    KB = new ArrayList<int[]>();
+    KB = new ArrayList<>();
     clickedTiles = new ArrayList<>();
     safeTiles = new ArrayList<>();
   }
 
   public static void main(String[] args) {
-
-
-
     printTruthTable(8);
     MSField f = new MSField("Minesweeper/fields/" + UsageExample.fields[5]);
     LogicalMSAgent testAgent = new LogicalMSAgent(f);
 
     System.out.println("phlipps test:");
-
-
-
     System.out.println("phlipps test over");
 
     int count = 1;
@@ -106,7 +100,6 @@ public class LogicalMSAgent extends MSAgent {
    */
   public int[] chooseTile(){
     int chosen;
-    int [] result = new int[2]; // result[0] = x, result[1] = y
     if(safeTiles.size()>0) {
       chosen = safeTiles.get(safeTiles.size()-1);
     } else {
@@ -118,7 +111,7 @@ public class LogicalMSAgent extends MSAgent {
       for(int i = 1;i<=(numOfCols*numOfRows);i++) {
         explore.add(i);
       }
-      explore.removeAll(safeTiles);
+      explore.removeAll(safeTiles); // eigtl unnötig, weil safeTiles muss kleiner 1 sein
       explore.removeAll(clickedTiles);
       findSafeTiles(explore); // fügt neue safeTiles der Liste hinzu
       chosen = safeTiles.get(safeTiles.size()-1);
@@ -135,19 +128,21 @@ public class LogicalMSAgent extends MSAgent {
   public void findSafeTiles(HashSet<Integer> e) {
     ISolver solver = SolverFactory.newDefault();
     solver.newVar(MAXVAR);
-    solver.setExpectedNumberOfClauses(KB.size());
+    solver.setExpectedNumberOfClauses(KB.size()+1);
     try {
+      for(int j : e) {
+        solver.addClause(new VecInt(new int[]{j}));
       for (int i = 0;i<KB.size();i++){
         int[] clause = KB.get(i);// get the clause from somewhere
         solver.addClause(new VecInt(clause));
       }
-      for(int i : e) {
-        solver.addClause(new VecInt(new int[]{i*-1}));
       IProblem problem = solver;
       if (problem.isSatisfiable()) {
       // Variable konnte nicht bewiesen werde, dass sie keine Bombe sein muss.
+        solver.reset();
       } else {
-        safeTiles.add(i);
+        safeTiles.add(j);
+        solver.reset();
       }}
     } catch (Exception ex){
       System.out.println("SAT4J Problem occurred" + "\n" + ex.getMessage());

@@ -25,7 +25,7 @@ public class UsageExample {
 
 		int success = 0;
 		for (int i = 0; i < iterations; i++) {
-			MSField f = new MSField("Minesweeper/fields/" + fields[1]);
+			MSField f = new MSField("Minesweeper/fields/" + fields[9]);
 			MSAgent agent = new RandomMSAgent(f);
 			LogicalMSAgent schlauerKerl = new LogicalMSAgent(f);
 
