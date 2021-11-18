@@ -17,6 +17,7 @@ public class LogicalMSAgent extends MSAgent {
   private int numOfRows;
   private int numOfCols;
   private ArrayList<Integer> safeTiles;
+  private ArrayList<Integer> clickedTiles;
 
   public LogicalMSAgent(MSField field) {
     super(field);
@@ -57,10 +58,12 @@ public class LogicalMSAgent extends MSAgent {
         x = 0;
         y = 0;
         firstDecision = false;
+        clickedTiles.add(findName(x,y));
       } else {
         chooseTile();
         x = 0;
         y = 0;
+        //clickedTiles.add(findName(x,y));
       }
 
       if (displayActivated)
@@ -83,7 +86,10 @@ public class LogicalMSAgent extends MSAgent {
     }
   }
 
-  public void chooseTile(){
+  /** Gibt x,y zurück für Position/Feld, das gedrückt werden soll
+   */
+  public int[] chooseTile(){
+    int [] result = new int[2]; // result[0] = x, result[1] = y
     ISolver solver = SolverFactory.newDefault();
     solver.newVar(MAXVAR);
     solver.setExpectedNumberOfClauses(NBCLAUSES);
@@ -92,6 +98,7 @@ public class LogicalMSAgent extends MSAgent {
         int[] clause = KB.get(i);// get the clause from somewhere
             solver.addClause(new VecInt(clause));
       }
+      //for()
       IProblem problem = solver;
       if (problem.isSatisfiable()) {
 
@@ -101,6 +108,7 @@ public class LogicalMSAgent extends MSAgent {
     } catch (Exception e){
 
     }
+    return result;
   }
 
   /** Gibt für Feld an Position x,y den Namen zurück.
