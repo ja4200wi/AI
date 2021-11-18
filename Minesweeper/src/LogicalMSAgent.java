@@ -17,7 +17,7 @@ public class LogicalMSAgent extends MSAgent {
   private int numOfRows;
   private int numOfCols;
   private ArrayList<Integer> safeTiles;
-  private ArrayList<Integer> clickedTiles;
+  private ArrayList<Integer> clickedTiles = new ArrayList<>();
 
   public LogicalMSAgent(MSField field) {
     super(field);
@@ -30,9 +30,19 @@ public class LogicalMSAgent extends MSAgent {
   }
 
   public static void main(String[] args) {
+
+
+
     printTruthTable(8);
     MSField f = new MSField("Minesweeper/fields/" + UsageExample.fields[5]);
     LogicalMSAgent testAgent = new LogicalMSAgent(f);
+
+    System.out.println("phlipps test:");
+
+
+
+    System.out.println("phlipps test over");
+
     int count = 1;
     for(int i = 0;i < testAgent.numOfRows;i++){
       for(int j = 0;j < testAgent.numOfCols;j++){
@@ -166,7 +176,6 @@ public class LogicalMSAgent extends MSAgent {
    */
   private ArrayList<Integer> getNeighbours(int x, int y){
     ArrayList<Integer> neighbours = new ArrayList<Integer>();
-
     if(x == 0 && y == 0){
       // linke obere Ecke
       neighbours.add(this.findName(1,0));
@@ -226,6 +235,13 @@ public class LogicalMSAgent extends MSAgent {
       neighbours.add(this.findName(x,y+1));
       neighbours.add(this.findName(x+1,y+1));
     }
+    removeClickedNeigbours(neighbours);
+    return neighbours;
+  }
+
+
+  private ArrayList<Integer> removeClickedNeigbours(ArrayList<Integer> neighbours){
+    neighbours.removeAll(this.clickedTiles);
     return neighbours;
   }
 
@@ -286,6 +302,54 @@ public class LogicalMSAgent extends MSAgent {
     addVarNames(truthTable,neighbours);
     KB.addAll(extractModels(truthTable,feedback));
   }
+
+
+  static public void extendKBPhilipp(int feedback, int x, int y) {
+    ArrayList<Integer> neighbours = new ArrayList<>();//getNeighbours(x, y);
+    neighbours.add(1);
+    neighbours.add(2);
+    neighbours.add(3);
+    neighbours.add(4);
+
+    String s = "";
+    int amount = 4;
+
+    a: for(int a = 0; a <  neighbours.size(); a++){
+      for(int b = 0; b <  neighbours.size(); b++){
+        for(int c = 0; c <  neighbours.size(); c++){
+          for(int d = 0; d <  neighbours.size(); d++){
+            for(int e = 0; e <  neighbours.size(); e++){
+              for(int f = 0; f <  neighbours.size(); f++){
+                for(int g = 0; g <  neighbours.size(); g++){
+                  s += "(";
+                  for(int j = 0; j <  neighbours.size(); j++){
+                    if(g == j || j == f || j == e|| j == f || j == c|| j == b || j == a|| j == d){
+                      //  if(g == j || j == e &&amount != 4|| j == f &&amount != 5 || j == c &&amount != 2|| j == b &&amount != 1 || j == a && amount != 0|| j == d &&amount != 3){
+                      s += -1 * neighbours.get(j);
+                    }else{
+                      s += 1 * neighbours.get(j);
+                    }
+                  }
+                  s += ")";
+                  if(amount == 0) break a;
+                }
+                if(amount == 1) break a;
+              }
+              if(amount == 2) break a;
+            }
+            if(amount == 3) break a;
+          }
+          if(amount == 4) break a;
+        }
+        if(amount == 5) break a;
+      }
+      if(amount == 7) break a;
+    }
+    System.out.println(s);
+  }
+
+
+
 
   @Override
   public void activateDisplay() {this.displayActivated=true;}
