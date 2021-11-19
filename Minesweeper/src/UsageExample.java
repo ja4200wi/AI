@@ -20,13 +20,13 @@ public class UsageExample {
 
 	public static void main(String[] args) {
 		// use smaller numbers for larger fields
-		int iterations = 1;
-
+		int iterations = 1000;
+		double averageDuration = 0;
 		int success = 0;
 		for (int i = 0; i < iterations; i++) {
         System.out.println("round: "+i);
 
-			MSField f = new MSField("Minesweeper/fields/" + fields[10]);
+			MSField f = new MSField("Minesweeper/fields/" + fields[2]);
 			MSAgent agent = new RandomMSAgent(f);
 			LogicalMSAgent schlauerKerl = new LogicalMSAgent(f);
 
@@ -36,14 +36,17 @@ public class UsageExample {
 			} else {
 				schlauerKerl.deactivateDisplay();
 			}
-
+			Timer timer = new Timer();
+			timer.start();
 			boolean solved = schlauerKerl.solve();
 			if (solved) {
-				success++;
+        averageDuration += timer.stop();
+        success++;
 			}
 		}
 		double rate = (double) success / (double) iterations;
-		System.out.println("Erfolgsquote: " + rate*100+ " %");
+    System.out.println("Avg Duration: " + averageDuration / success+ " seconds");
+    System.out.println("Erfolgsquote: " + rate*100+ " %");
 	}
 
 }

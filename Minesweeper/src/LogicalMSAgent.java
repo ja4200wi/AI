@@ -35,7 +35,6 @@ public class LogicalMSAgent extends MSAgent {
     printTruthTable(8);
     MSField f = new MSField("Minesweeper/fields/" + UsageExample.fields[9]);
     LogicalMSAgent testAgent = new LogicalMSAgent(f);
-
     testAgent.solve();
 
     int count = 1;
@@ -51,7 +50,10 @@ public class LogicalMSAgent extends MSAgent {
   @Override
   public boolean solve() {
     int x, y, feedback;
+
+    int steps = 0;
     do {
+      steps++;
       if (displayActivated) {
         System.out.println(field);
       }
@@ -72,7 +74,6 @@ public class LogicalMSAgent extends MSAgent {
       }
       feedback = field.uncover(x, y);
       extendKB(feedback,x,y);
-
     } while (feedback >= 0 && !field.solved());
 
     if (field.solved()) {
@@ -313,4 +314,6 @@ public class LogicalMSAgent extends MSAgent {
 
   @Override
   public void deactivateDisplay() {this.displayActivated=false;}
+
+
 }
