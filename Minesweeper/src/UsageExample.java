@@ -15,22 +15,23 @@ public class UsageExample {
 			"baby9-7x7-10.txt", "anfaenger1-9x9-10.txt", "anfaenger2-9x9-10.txt", "anfaenger3-9x9-10.txt",
 			"anfaenger4-9x9-10.txt", "anfaenger5-9x9-10.txt", "fortgeschrittene1-16x16-40.txt", "fortgeschrittene2-16x16-40.txt",
 			"fortgeschrittene3-16x16-40.txt", "fortgeschrittene4-16x16-40.txt", "fortgeschrittene5-16x16-40.txt",
-			"profi1-30x16-99.txt", "profi2-30x16-99.txt", "profi3-30x16-99.txt", "profi4-30x16-99.txt",
+			"profi1-30x16-99.txt", "profi2-30x16-99.txt", "profi3-30x16-99.txt", "profi4-30x16-99.txt",//21
 			"profi5-30x16-99.txt" };
 
 	public static void main(String[] args) {
-
 		// use smaller numbers for larger fields
-		int iterations = 1000;
+		int iterations = 1;
 
 		int success = 0;
 		for (int i = 0; i < iterations; i++) {
-			MSField f = new MSField("Minesweeper/fields/" + fields[9]);
+        System.out.println("round: "+i);
+
+			MSField f = new MSField("Minesweeper/fields/" + fields[10]);
 			MSAgent agent = new RandomMSAgent(f);
 			LogicalMSAgent schlauerKerl = new LogicalMSAgent(f);
 
 			// to see what happens in the first iteration
-			if (i == 0) {
+			if (i == i) {
 				schlauerKerl.activateDisplay();
 			} else {
 				schlauerKerl.deactivateDisplay();
@@ -42,8 +43,7 @@ public class UsageExample {
 			}
 		}
 		double rate = (double) success / (double) iterations;
-		System.out.println("Erfolgsquote: " + rate);
-
+		System.out.println("Erfolgsquote: " + rate*100+ " %");
 	}
 
 }

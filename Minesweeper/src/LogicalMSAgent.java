@@ -2,13 +2,15 @@ package Minesweeper.src;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Random;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 
 public class LogicalMSAgent extends MSAgent {
+
+  private Random rand = new Random();
 
   private boolean displayActivated = false;
   private boolean firstDecision = true;
@@ -31,11 +33,10 @@ public class LogicalMSAgent extends MSAgent {
 
   public static void main(String[] args) {
     printTruthTable(8);
-    MSField f = new MSField("Minesweeper/fields/" + UsageExample.fields[5]);
+    MSField f = new MSField("Minesweeper/fields/" + UsageExample.fields[9]);
     LogicalMSAgent testAgent = new LogicalMSAgent(f);
 
-    System.out.println("phlipps test:");
-    System.out.println("phlipps test over");
+    testAgent.solve();
 
     int count = 1;
     for(int i = 0;i < testAgent.numOfRows;i++){
@@ -44,16 +45,7 @@ public class LogicalMSAgent extends MSAgent {
       }
       System.out.println();
     }
-    System.out.println(testAgent.findName(2,3));
-    ArrayList<Integer> huso = testAgent.getNeighbours(2,3);
-    Iterator<Integer> it = huso.iterator();
-    while(it.hasNext()) {
-      System.out.print(it.next() + " ");
-    }
-    System.out.println();
-    testAgent.extendKB(2,1,1);
-    int[] xy = testAgent.findPos(8);
-    for(int i : xy) {System.out.println(i);}
+
   }
 
   @Override
@@ -84,14 +76,14 @@ public class LogicalMSAgent extends MSAgent {
     } while (feedback >= 0 && !field.solved());
 
     if (field.solved()) {
-      if (displayActivated) {
+     // if (displayActivated) {
         System.out.println("Solved the field");
-      }
+     // }
       return true;
     } else {
-      if (displayActivated) {
+   //   if (displayActivated) {
         System.out.println("BOOM!");
-      }
+    //  }
       return false;
     }
   }
@@ -114,9 +106,20 @@ public class LogicalMSAgent extends MSAgent {
       explore.removeAll(safeTiles); // eigtl unnötig, weil safeTiles muss kleiner 1 sein
       explore.removeAll(clickedTiles);
       findSafeTiles(explore); // fügt neue safeTiles der Liste hinzu
-      chosen = safeTiles.get(safeTiles.size()-1);
+      if(safeTiles.size() == 0){
+        System.out.println("Random Pick");
+        int t =  findName(rand.nextInt(numOfCols), rand.nextInt(numOfRows));
+        while(clickedTiles.contains(t)){
+          t =  findName(rand.nextInt(numOfCols), rand.nextInt(numOfRows));
+        }
+        chosen = t;
+      }else {
+        chosen = safeTiles.get(safeTiles.size() - 1);
+      }
     }
-    safeTiles.remove(safeTiles.size()-1);
+    if(safeTiles.size() > 0) {
+      safeTiles.remove(safeTiles.size() - 1);
+    }
     clickedTiles.add(chosen);
     return findPos(chosen);
   }
@@ -125,25 +128,31 @@ public class LogicalMSAgent extends MSAgent {
    * Alle Felder, die übergeben werden, werden auf Erfüllbarkeit geprüft.
    * Annahme: Feld i ist frei, dann gilt: KB U !i ist unerfüllbar.
    */
-  public void findSafeTiles(HashSet<Integer> e) {
+  public void findSafeTiles(HashSet<Integer> explore) {
     ISolver solver = SolverFactory.newDefault();
     solver.newVar(MAXVAR);
     solver.setExpectedNumberOfClauses(KB.size()+1);
     try {
-      for(int j : e) {
+      for(int j : explore) {
         solver.addClause(new VecInt(new int[]{j})); // j dachte ich zumindest müsste negativ sein
-      for (int i = 0;i<KB.size();i++){
-        int[] clause = KB.get(i);// get the clause from somewhere
-        solver.addClause(new VecInt(clause));
-      }
-      IProblem problem = solver;
-      if (problem.isSatisfiable()) {
-      // Variable konnte nicht bewiesen werde, dass sie keine Bombe sein muss.
-        solver.reset();
-      } else {
-        safeTiles.add(j);
-        solver.reset();
-      }}
+        for (int i = 0;i<KB.size();i++){
+          int[] clause = KB.get(i); // get the clause from somewhere
+          try {
+            solver.addClause(new VecInt(clause));
+          }catch(Exception x){
+  //          System.out.println(new VecInt(clause));
+            //            System.out.println(clause.length);
+            //            x.printStackTrace();
+          }
+        }
+        IProblem problem = solver;
+        if (problem.isSatisfiable()) {
+          // Variable konnte nicht bewiesen werden, dass sie keine Bombe sein muss.
+          solver.reset();
+        } else {
+          safeTiles.add(j);
+          solver.reset();
+        }}
     } catch (Exception ex){
       System.out.println("SAT4J Problem occurred" + "\n" + ex.getMessage());
       ex.printStackTrace();
@@ -274,19 +283,19 @@ public class LogicalMSAgent extends MSAgent {
   }
 
   /**
-  Nimmt Wahrheitstabelle mit Variablen und schliesst die Zeilen aus, die Modelle sind.
-  Gibt ArrayList mit Klauseln für KNF zurück.
+   Nimmt Wahrheitstabelle mit Variablen und schliesst die Zeilen aus, die Modelle sind.
+   Gibt ArrayList mit Klauseln für KNF zurück.
    */
   private ArrayList<int[]> extractModels(int[][] tt,int feedback){
     ArrayList<int[]> KNF = new ArrayList<>();
-  for(int[] row : tt){
-    int countNeg = 0;
-    for(int i : row){
-      if(i<0){countNeg++;}
+    for(int[] row : tt){
+      int countNeg = 0;
+      for(int i : row){
+        if(i<0){countNeg++;}
+      }
+      if(countNeg!=feedback){KNF.add(row);}
     }
-    if(countNeg!=feedback){KNF.add(row);}
-  }
-  return KNF;
+    return KNF;
   }
 
   /** Nimmt Feedback zu gedrücktem Feld x,y. Wandelt dies in Klauseln um, die in in die KB gespeist werden.
@@ -297,53 +306,6 @@ public class LogicalMSAgent extends MSAgent {
     addVarNames(truthTable,neighbours);
     KB.addAll(extractModels(truthTable,feedback));
   }
-
-
-  static public void extendKBPhilipp(int feedback, int x, int y) {
-    ArrayList<Integer> neighbours = new ArrayList<>();//getNeighbours(x, y);
-    neighbours.add(1);
-    neighbours.add(2);
-    neighbours.add(3);
-    neighbours.add(4);
-
-    String s = "";
-    int amount = 4;
-
-    a: for(int a = 0; a <  neighbours.size(); a++){
-      for(int b = 0; b <  neighbours.size(); b++){
-        for(int c = 0; c <  neighbours.size(); c++){
-          for(int d = 0; d <  neighbours.size(); d++){
-            for(int e = 0; e <  neighbours.size(); e++){
-              for(int f = 0; f <  neighbours.size(); f++){
-                for(int g = 0; g <  neighbours.size(); g++){
-                  s += "(";
-                  for(int j = 0; j <  neighbours.size(); j++){
-                    if(g == j || j == f || j == e|| j == f || j == c|| j == b || j == a|| j == d){
-                      //  if(g == j || j == e &&amount != 4|| j == f &&amount != 5 || j == c &&amount != 2|| j == b &&amount != 1 || j == a && amount != 0|| j == d &&amount != 3){
-                      s += -1 * neighbours.get(j);
-                    }else{
-                      s += 1 * neighbours.get(j);
-                    }
-                  }
-                  s += ")";
-                  if(amount == 0) break a;
-                }
-                if(amount == 1) break a;
-              }
-              if(amount == 2) break a;
-            }
-            if(amount == 3) break a;
-          }
-          if(amount == 4) break a;
-        }
-        if(amount == 5) break a;
-      }
-      if(amount == 7) break a;
-    }
-    System.out.println(s);
-  }
-
-
 
 
   @Override
