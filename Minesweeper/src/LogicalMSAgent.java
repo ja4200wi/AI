@@ -67,11 +67,18 @@ public class LogicalMSAgent extends MSAgent {
         x = xy[0];
         y = xy[1];
         clickedTiles.add(findName(x,y));
+        if(safeTiles.indexOf(findName(x,y)) > 0){
+          safeTiles.remove(safeTiles.indexOf(findName(x, y)));
+        }
       }
 
       if (displayActivated) {
         System.out.println("Uncovering (" + x + "," + y + ")");
       }
+      for (int i = 0; i < safeTiles.size(); i++){
+        System.out.println(safeTiles.get(i));
+      }
+
       feedback = field.uncover(x, y);
       extendKB(feedback,x,y);
     } while (feedback >= 0 && !field.solved());
@@ -135,16 +142,15 @@ public class LogicalMSAgent extends MSAgent {
     solver.setExpectedNumberOfClauses(KB.size()+1);
     try {
       for(int j : explore) {
-        solver.addClause(new VecInt(new int[]{j})); // j dachte ich zumindest müsste negativ sein
         for (int i = 0;i<KB.size();i++){
           int[] clause = KB.get(i); // get the clause from somewhere
           try {
             solver.addClause(new VecInt(clause));
           }catch(Exception x){
-  //          System.out.println(new VecInt(clause));
-            //            System.out.println(clause.length);
-            //            x.printStackTrace();
+            System.out.println(new VecInt(clause));
+            System.out.println("ooo");
           }
+          solver.addClause(new VecInt(new int[]{j})); // j dachte ich zumindest müsste negativ sein
         }
         IProblem problem = solver;
         if (problem.isSatisfiable()) {
@@ -154,6 +160,7 @@ public class LogicalMSAgent extends MSAgent {
           safeTiles.add(j);
           solver.reset();
         }}
+
     } catch (Exception ex){
       System.out.println("SAT4J Problem occurred" + "\n" + ex.getMessage());
       ex.printStackTrace();
