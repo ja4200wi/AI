@@ -75,9 +75,7 @@ public class LogicalMSAgent extends MSAgent {
       if (displayActivated) {
         System.out.println("Uncovering (" + x + "," + y + ")");
       }
-      for (int i = 0; i < safeTiles.size(); i++){
-        System.out.println(safeTiles.get(i));
-      }
+
 
       feedback = field.uncover(x, y);
       extendKB(feedback,x,y);
@@ -89,9 +87,9 @@ public class LogicalMSAgent extends MSAgent {
      // }
       return true;
     } else {
-   //   if (displayActivated) {
+      if (displayActivated) {
         System.out.println("BOOM!");
-    //  }
+     }
       return false;
     }
   }
@@ -115,7 +113,7 @@ public class LogicalMSAgent extends MSAgent {
       explore.removeAll(clickedTiles);
       findSafeTiles(explore); // fügt neue safeTiles der Liste hinzu
       if(safeTiles.size() == 0){
-        System.out.println("Random Pick");
+      //  System.out.println("Random Pick");
         int t =  findName(rand.nextInt(numOfCols), rand.nextInt(numOfRows));
         while(clickedTiles.contains(t)){
           t =  findName(rand.nextInt(numOfCols), rand.nextInt(numOfRows));
@@ -147,8 +145,6 @@ public class LogicalMSAgent extends MSAgent {
           try {
             solver.addClause(new VecInt(clause));
           }catch(Exception x){
-            System.out.println(new VecInt(clause));
-            System.out.println("ooo");
           }
           solver.addClause(new VecInt(new int[]{j})); // j dachte ich zumindest müsste negativ sein
         }
