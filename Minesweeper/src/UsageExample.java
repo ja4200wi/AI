@@ -20,15 +20,12 @@ public class UsageExample {
 
 	public static void main(String[] args) {
     // use smaller numbers for larger fields
-    for (int x = 15; x < fields.length; x++) {
-      System.out.println("Next Field: "+fields[x]);
       int iterations = 1000;
-      if(x> 18) iterations = 100;
       System.out.println("iterations: "+iterations);
       double averageDuration = 0;
       int success = 0;
       for (int i = 0; i < iterations; i++) {
-        MSField f = new MSField("Minesweeper/fields/" + fields[x]);
+        MSField f = new MSField("Minesweeper/fields/" + fields[16]);
         MSAgent agent = new RandomMSAgent(f);
         LogicalMSAgent schlauerKerl = new LogicalMSAgent(f);
 
@@ -50,5 +47,5 @@ public class UsageExample {
       System.out.println("Avg Duration: " + averageDuration / success + " seconds");
       System.out.println("Erfolgsquote: " + rate * 100 + " %");
     }
-  }
+
 }
